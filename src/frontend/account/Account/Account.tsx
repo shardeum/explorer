@@ -19,22 +19,14 @@ const tableColumns: IColumnProps<AccountT>[] = [
     key: 'ethAddress',
     value: 'Account Address',
     render: (val: unknown, item: AccountT) => (
-      <AnchorLink
-        href={`/account/${item?.ethAddress}`}
-        label={val as string}
-        size="small"
-        width={400}
-        ellipsis
-      />
+      <AnchorLink href={`/account/${item?.ethAddress}`} label={val as string} size="small" width={400} ellipsis />
     ),
   },
   {
     key: 'account.account.balance',
     value: 'Balance',
     render: (_: unknown, item: AccountT) => (
-      <>{`${Number(
-        fromWeiNoTrailingComma(`0x${item?.account?.account?.balance}`, 'ether')
-      ).toFixed()} SHM`}</>
+      <>{`${Number(fromWeiNoTrailingComma(`0x${item?.account?.account?.balance}`, 'ether')).toFixed()} SHM`}</>
     ),
   },
   {

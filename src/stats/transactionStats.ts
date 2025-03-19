@@ -33,10 +33,7 @@ export async function insertTransactionStats(transactionStats: TransactionStats)
     console.log('Successfully inserted TransactionStats', transactionStats.cycle)
   } catch (e) {
     console.log(e)
-    console.log(
-      'Unable to insert transactionStats or it is already stored in to database',
-      transactionStats.cycle
-    )
+    console.log('Unable to insert transactionStats or it is already stored in to database', transactionStats.cycle)
   }
 }
 
@@ -51,12 +48,7 @@ export async function bulkInsertTransactionsStats(transactionsStats: Transaction
     }
     await db.run(sql, values)
     const addedCycles = transactionsStats.map((v) => v.cycle)
-    console.log(
-      'Successfully bulk inserted TransactionsStats',
-      transactionsStats.length,
-      'for cycles',
-      addedCycles
-    )
+    console.log('Successfully bulk inserted TransactionsStats', transactionsStats.length, 'for cycles', addedCycles)
   } catch (e) {
     console.log(e)
     console.log('Unable to bulk insert TransactionsStats', transactionsStats.length)
@@ -77,10 +69,7 @@ export async function queryLatestTransactionStats(count: number): Promise<Transa
   }
 }
 
-export async function queryTransactionStatsBetween(
-  startCycle: number,
-  endCycle: number
-): Promise<TransactionStats[]> {
+export async function queryTransactionStatsBetween(startCycle: number, endCycle: number): Promise<TransactionStats[]> {
   try {
     const sql = `SELECT * FROM transactions WHERE cycle BETWEEN ? AND ? ORDER BY cycle DESC LIMIT 100`
     const transactionsStats: TransactionStats[] = await db.all(sql, [startCycle, endCycle])
@@ -94,22 +83,20 @@ export async function queryTransactionStatsBetween(
   }
 }
 
-
 export async function queryEmptyTransactionStats(currentCycle: number, lookBack: number): Promise<TransactionStats[]> {
   try {
-    const startCycle = currentCycle - lookBack;
-    const sql = `SELECT * FROM transactions WHERE totalTxs = 0 AND cycle BETWEEN ? AND ?`;
-    const emptyTxStats: TransactionStats[] = await db.all(sql, [startCycle, currentCycle]);
+    const startCycle = currentCycle - lookBack
+    const sql = `SELECT * FROM transactions WHERE totalTxs = 0 AND cycle BETWEEN ? AND ?`
+    const emptyTxStats: TransactionStats[] = await db.all(sql, [startCycle, currentCycle])
     if (config.verbose) {
       console.log(
         `Empty TransactionStats records found between cycles ${startCycle} and ${currentCycle}:`,
         emptyTxStats
-      );
+      )
     }
-    return emptyTxStats;
+    return emptyTxStats
   } catch (e) {
-    console.error('Error querying empty transaction stats:', e);
-    return [];
+    console.error('Error querying empty transaction stats:', e)
+    return []
   }
 }
-

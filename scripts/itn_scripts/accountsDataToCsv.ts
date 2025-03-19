@@ -110,7 +110,7 @@ const accountsDataWriter = csvWriter.createObjectCsvWriter({
 })
 
 function bigIntReplacer(key: string, value: any): string {
-  if(typeof value === 'bigint') {
+  if (typeof value === 'bigint') {
     return bigIntToHex(value)
   }
   return value
@@ -120,7 +120,7 @@ function transformAccountRecord(account: any): void {
   if (account?.account?.balance) {
     account.account.balance = bigIntToHex(account.account.balance)
   }
-  if(account?.account?.nonce) {
+  if (account?.account?.nonce) {
     account.account.nonce = bigIntToHex(account.account.nonce)
   }
   if (account?.account) {
@@ -183,12 +183,7 @@ async function fetchAndWriteAccounts(startTimestamp: number, endTimestamp: numbe
 
   // eslint-disable-next-line no-constant-condition
   while (true) {
-    const accounts: Account[] = await queryAccountsBetweenTimestamps(
-      startTimestamp,
-      endTimestamp,
-      offset,
-      limit
-    )
+    const accounts: Account[] = await queryAccountsBetweenTimestamps(startTimestamp, endTimestamp, offset, limit)
     if (accounts.length === 0) break
 
     await accountsDataWriter.writeRecords(

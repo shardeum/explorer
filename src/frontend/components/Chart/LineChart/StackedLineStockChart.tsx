@@ -242,11 +242,6 @@ export const StackedLineStockChart: React.FC<StackedLineChartProps> = (props: St
   }
 
   return (
-    <HighchartsReact
-      highcharts={Highcharts}
-      options={option}
-      allowChartUpdate={true}
-      constructorType="stockChart"
-    />
+    <HighchartsReact highcharts={Highcharts} options={option} allowChartUpdate={true} constructorType="stockChart" />
   )
 }

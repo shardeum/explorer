@@ -15,8 +15,7 @@ export const useTransaction = (query: TransactionQuery): PagedTransaction => {
     if (count) url = `${PATHS.TRANSACTION}?count=${count}`
     if (txType) {
       url += `&txType=${txType}`
-      if (txType === TransactionSearchType.Pending)
-        url = `${PATHS.ORIGINAL_TX}?pending=true&decode=true&page=${page}`
+      if (txType === TransactionSearchType.Pending) url = `${PATHS.ORIGINAL_TX}?pending=true&decode=true&page=${page}`
     }
     return url
   }
@@ -26,10 +25,7 @@ export const useTransaction = (query: TransactionQuery): PagedTransaction => {
   const transactions: Transaction[] = data?.transactions || []
   const originalTxs: OriginalTxData[] = data?.originalTxs || []
 
-  const response = useSWR<PagedTransaction>(
-    totalStakeData ? `${PATHS.TRANSACTION}?totalStakeData=true` : null,
-    fetcher
-  )
+  const response = useSWR<PagedTransaction>(totalStakeData ? `${PATHS.TRANSACTION}?totalStakeData=true` : null, fetcher)
 
   return {
     transactions,

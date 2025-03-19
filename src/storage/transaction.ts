@@ -72,8 +72,7 @@ export async function updateTransaction(_txId: string, transaction: Partial<Tran
     const sql = `UPDATE transactions SET result = $result, cycle = $cycle, wrappedEVMAccount = $wrappedEVMAccount, txHash = $txHash WHERE txId = $txId `
     await db.run(sql, {
       $cycle: transaction.cycle,
-      $wrappedEVMAccount:
-        transaction.wrappedEVMAccount && StringUtils.safeStringify(transaction.wrappedEVMAccount),
+      $wrappedEVMAccount: transaction.wrappedEVMAccount && StringUtils.safeStringify(transaction.wrappedEVMAccount),
       $txHash: transaction.txHash,
       $txId: transaction.txId,
     })
@@ -194,9 +193,7 @@ export async function processTransactionData(transactions: RawTransaction[]): Pr
       const { txs, accs, tokens } = await decodeTx(txObj)
       for (const acc of accs) {
         if (acc === ZERO_ETH_ADDRESS) continue
-        const index = combineAccounts.findIndex(
-          (a) => a.accountId === acc.slice(2).toLowerCase() + '0'.repeat(24)
-        )
+        const index = combineAccounts.findIndex((a) => a.accountId === acc.slice(2).toLowerCase() + '0'.repeat(24))
         if (index > -1) {
           // eslint-disable-next-line security/detect-object-injection
           const accountExist = combineAccounts[index]
@@ -626,8 +623,7 @@ export async function queryTransactionByTxId(txId: string, detail = false): Prom
     if (transaction) {
       if (transaction.wrappedEVMAccount)
         transaction.wrappedEVMAccount = StringUtils.safeJsonParse(transaction.wrappedEVMAccount)
-      if (transaction.originalTxData)
-        transaction.originalTxData = StringUtils.safeJsonParse(transaction.originalTxData)
+      if (transaction.originalTxData) transaction.originalTxData = StringUtils.safeJsonParse(transaction.originalTxData)
     }
     if (detail) {
       const sql = `SELECT * FROM tokenTxs WHERE txId=?`
@@ -835,8 +831,7 @@ export async function queryTransactionsBetweenCycles(
     }
     if (transactions.length > 0) {
       transactions.forEach((transaction: DbTransaction | DbTokenTx) => {
-        if ('transactionType' in transaction && transaction.transactionType)
-          deserializeDbTransaction(transaction)
+        if ('transactionType' in transaction && transaction.transactionType) deserializeDbTransaction(transaction)
         else if ('tokenType' in transaction && transaction.tokenType) deserializeDbToken(transaction)
       })
     }
@@ -1358,8 +1353,7 @@ export async function queryTransactionsByTimestamp(
     transactions = await db.all(sql, values)
     if (transactions.length > 0) {
       transactions.forEach((transaction) => {
-        if ('transactionType' in transaction && transaction.transactionType)
-          deserializeDbTransaction(transaction)
+        if ('transactionType' in transaction && transaction.transactionType) deserializeDbTransaction(transaction)
         else if ('tokenType' in transaction && transaction.tokenType) deserializeDbToken(transaction)
       })
     }
@@ -1397,10 +1391,7 @@ export async function queryTransactionCountByBlock(blockNumber: number, blockHas
 }
 
 // transactions with txType = Receipt, StakeReceipt, UnstakeReceipt
-export async function queryTransactionsByBlock(
-  blockNumber: number,
-  blockHash: string
-): Promise<DbTransaction[]> {
+export async function queryTransactionsByBlock(blockNumber: number, blockHash: string): Promise<DbTransaction[]> {
   let transactions: DbTransaction[] = []
   let sql = `SELECT * FROM transactions WHERE transactionType IN (?,?,?) AND `
   const values: (number | string)[] = [

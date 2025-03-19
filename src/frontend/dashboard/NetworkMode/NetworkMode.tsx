@@ -37,8 +37,7 @@ const modeData: Record<Modes, ModeData> = {
   },
   [Modes.Shutdown]: {
     color: '#d35400',
-    tooltipContent:
-      'Shutdown: All transactions stop being processed and nodes exit the network after a short period.',
+    tooltipContent: 'Shutdown: All transactions stop being processed and nodes exit the network after a short period.',
   },
   [Modes.Restart]: {
     color: '#27ae60',

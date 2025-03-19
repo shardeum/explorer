@@ -326,10 +326,8 @@ export async function processReceiptData(receipts: Receipt[], saveOnlyNewData = 
   if (combineReceipts.length > 0) await bulkInsertReceipts(combineReceipts)
   if (combineAccounts1.length > 0) await AccountDB.bulkInsertAccounts(combineAccounts1)
   if (combineTransactions.length > 0) await TransactionDB.bulkInsertTransactions(combineTransactions)
-  if (combineTokenTransactions.length > 0)
-    await TransactionDB.bulkInsertTokenTransactions(combineTokenTransactions)
-  if (combineTokenTransactions2.length > 0)
-    await TransactionDB.bulkInsertTokenTransactions(combineTokenTransactions2)
+  if (combineTokenTransactions.length > 0) await TransactionDB.bulkInsertTokenTransactions(combineTokenTransactions)
+  if (combineTokenTransactions2.length > 0) await TransactionDB.bulkInsertTokenTransactions(combineTokenTransactions2)
   if (combineTokens.length > 0) await AccountDB.bulkInsertTokens(combineTokens)
   if (contractAccountsIdToDecode.length > 0) {
     for (const accountId of contractAccountsIdToDecode) {
@@ -420,12 +418,7 @@ export async function queryReceiptCountByCycles(
   })
 }
 
-export async function queryReceiptsBetweenCycles(
-  skip = 0,
-  limit = 10,
-  start: number,
-  end: number
-): Promise<Receipt[]> {
+export async function queryReceiptsBetweenCycles(skip = 0, limit = 10, start: number, end: number): Promise<Receipt[]> {
   let receipts: DbReceipt[] = []
   try {
     const sql = `SELECT * FROM receipts WHERE cycle BETWEEN ? and ? ORDER BY cycle ASC, timestamp ASC LIMIT ${limit} OFFSET ${skip}`

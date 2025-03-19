@@ -44,8 +44,7 @@ let rmqCyclesConsumer: RMQCyclesConsumer
 let rmqTransactionsConsumer: RMQOriginalTxsConsumer
 let rmqReceiptsConsumer: RMQReceiptsConsumer
 
-const { hashKey, verbose, DISTRIBUTOR_RECONNECT_INTERVAL, CONNECT_TO_DISTRIBUTOR_MAX_RETRY } =
-  CONFIG
+const { hashKey, verbose, DISTRIBUTOR_RECONNECT_INTERVAL, CONNECT_TO_DISTRIBUTOR_MAX_RETRY } = CONFIG
 
 const DistributorFirehoseEvent = 'FIREHOSE'
 
@@ -137,7 +136,7 @@ export const checkAndSyncData = async (): Promise<Function> => {
   if (totalOriginalTxsToSync > lastStoredOriginalTxDataCount) toggleNeedSyncing()
   if (!needSyncing && totalCyclesToSync > lastStoredCycleCount) toggleNeedSyncing()
 
-  const syncData = async(): Promise<void> => {
+  const syncData = async (): Promise<void> => {
     await downloadAndSyncGenesisAccounts() // To sync accounts data that are from genesis accounts/accounts data that the network start with
 
     if (needSyncing) {
@@ -217,9 +216,7 @@ const connectToDistributor = (): void => {
   ws.onclose = (closeEvent: WebSocket.CloseEvent) => {
     switch (closeEvent.code) {
       case DistributorSocketCloseCodes.DUPLICATE_CONNECTION_CODE:
-        console.log(
-          '❌ Socket Connection w/ same client credentials attempted. Dropping existing connection.'
-        )
+        console.log('❌ Socket Connection w/ same client credentials attempted. Dropping existing connection.')
         break
       case DistributorSocketCloseCodes.SUBSCRIBER_EXPIRATION_CODE:
         console.log('❌ Subscription Validity Expired. Connection Terminated.')

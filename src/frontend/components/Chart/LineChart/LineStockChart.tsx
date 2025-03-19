@@ -210,11 +210,6 @@ export const LineStockChart: React.FC<LineStockChartProps> = (props) => {
   }
 
   return (
-    <HighchartsReact
-      highcharts={Highcharts}
-      options={option}
-      allowChartUpdate={true}
-      constructorType="stockChart"
-    />
+    <HighchartsReact highcharts={Highcharts} options={option} allowChartUpdate={true} constructorType="stockChart" />
   )
 }

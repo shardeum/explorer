@@ -151,8 +151,7 @@ export const AccountDetail: React.FC = () => {
                   <DetailCard
                     title="Overview"
                     titleRight={
-                      account?.contractType &&
-                      (account?.contractType as ContractType) !== ContractType.GENERIC ? (
+                      account?.contractType && (account?.contractType as ContractType) !== ContractType.GENERIC ? (
                         <div className={styles.buttonWrapper}>
                           <Button
                             apperance="outlined"
@@ -205,8 +204,7 @@ export const AccountDetail: React.FC = () => {
                       },
                       {
                         key: 'StakeLock',
-                        value:
-                          account?.account?.stakeLock && calculateValue(`0x${account?.account?.stakeLock}`),
+                        value: account?.account?.stakeLock && calculateValue(`0x${account?.account?.stakeLock}`),
                       },
                     ]}
                   />
@@ -224,8 +222,7 @@ export const AccountDetail: React.FC = () => {
                       {
                         key: 'Reward End Time',
                         value:
-                          account?.account?.rewardEndTime &&
-                          moment(account?.account?.rewardEndTime * 1000).calendar(),
+                          account?.account?.rewardEndTime && moment(account?.account?.rewardEndTime * 1000).calendar(),
                       },
                       {
                         key: 'Reward',
@@ -251,9 +248,7 @@ export const AccountDetail: React.FC = () => {
                             ? utils
                                 .formatUnits(
                                   account?.contractInfo?.totalSupply,
-                                  account?.contractInfo?.decimals
-                                    ? parseInt(account?.contractInfo?.decimals)
-                                    : 18
+                                  account?.contractInfo?.decimals ? parseInt(account?.contractInfo?.decimals) : 18
                                 )
                                 .toString()
                             : '',

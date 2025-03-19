@@ -119,9 +119,7 @@ export const LineChart: React.FC<LineChartProps> = (props: LineChartProps) => {
       menuItemDefinitions: {
         viewFullscreen: {
           onclick: function () {
-            name === 'Validators'
-              ? router.push('/validator_line_chart')
-              : router.push('/transaction_line_chart')
+            name === 'Validators' ? router.push('/validator_line_chart') : router.push('/transaction_line_chart')
           },
           text: 'View Detail',
         },

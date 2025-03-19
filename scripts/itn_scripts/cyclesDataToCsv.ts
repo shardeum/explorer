@@ -192,10 +192,10 @@ function transformCycleRecord(cycleRecord: Cycle, csvCycleRecords: CsvCycleRecor
           })
         })
       } else {
-        console.log("No valid key found in: ", cycleRecord.counter)
+        console.log('No valid key found in: ', cycleRecord.counter)
       }
     } else {
-      console.log("No valid key found in: ", cycleRecord.counter)
+      console.log('No valid key found in: ', cycleRecord.counter)
     }
   })
 }
@@ -218,8 +218,7 @@ async function queryCycleRecordsBetween(
     const cycles: DbCycle[] = await db.all(sql, [start, end])
     if (cycles.length > 0) {
       cycles.forEach((cycleRecord: DbCycle) => {
-        if (cycleRecord.cycleRecord)
-          cycleRecord.cycleRecord = StringUtils.safeJsonParse(cycleRecord.cycleRecord)
+        if (cycleRecord.cycleRecord) cycleRecord.cycleRecord = StringUtils.safeJsonParse(cycleRecord.cycleRecord)
         transformCycleRecord(cycleRecord as Cycle, csvCycleRecords)
       })
     }

@@ -88,10 +88,7 @@ const start = async (): Promise<void> => {
 
     if (latestCycleCounter % backFillInterval === 0) {
       console.log(`Cycle is a multiple of ${backFillInterval}. Checking for empty transaction stats...`)
-      const emptyTxStats = await TransactionStats.queryEmptyTransactionStats(
-        latestCycleCounter,
-        backFillAmount
-      )
+      const emptyTxStats = await TransactionStats.queryEmptyTransactionStats(latestCycleCounter, backFillAmount)
       const missingCycles = emptyTxStats.map((stat) => stat.cycle)
 
       if (missingCycles.length) {

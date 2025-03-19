@@ -16,8 +16,7 @@ export function getTransactionObj(
   }
   if (!transactionObj) {
     try {
-      transactionObj =
-        TransactionFactory.fromSerializedData<TransactionType.AccessListEIP2930>(serializedInput)
+      transactionObj = TransactionFactory.fromSerializedData<TransactionType.AccessListEIP2930>(serializedInput)
     } catch (e) {
       /* prettier-ignore */ if (config.verbose) console.log('Unable to get transaction obj', e)
     }

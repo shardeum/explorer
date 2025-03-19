@@ -45,9 +45,7 @@ export default class RMQConsumer {
             }
           } catch (e) {
             console.error(
-              `Consumer [${
-                this.name
-              }]: Error while processing message: ${e}\nMessage: ${msg.content.toString()}`
+              `Consumer [${this.name}]: Error while processing message: ${e}\nMessage: ${msg.content.toString()}`
             )
             this.channel!.nack(msg, false, true)
           }
