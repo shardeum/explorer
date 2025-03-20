@@ -47,21 +47,13 @@ export const useStats = (query: {
   }
 
   // get responses
-  const validatorStatsResponse = useSWR<{ validatorStats: ValidatorStats[] }>(
-    validatorStatsQuery,
-    fetcher,
-    swrOptions
-  )
+  const validatorStatsResponse = useSWR<{ validatorStats: ValidatorStats[] }>(validatorStatsQuery, fetcher, swrOptions)
   const transactionStatsResponse = useSWR<{ transactionStats: TransactionStats[] }>(
     transactionStatsQuery,
     fetcher,
     swrOptions
   )
-  const coinStatsResponse = useSWR<{ totalSupply: number; totalStaked: number }>(
-    coinStatsQuery,
-    fetcher,
-    swrOptions
-  )
+  const coinStatsResponse = useSWR<{ totalSupply: number; totalStaked: number }>(coinStatsQuery, fetcher, swrOptions)
 
   // get values
   const validatorStats =
@@ -95,8 +87,6 @@ export const useStats = (query: {
     totalSHM,
     totalStakedSHM,
     loading:
-      validatorStatsResponse?.isValidating ||
-      transactionStatsResponse?.isValidating ||
-      coinStatsResponse?.isValidating,
+      validatorStatsResponse?.isValidating || transactionStatsResponse?.isValidating || coinStatsResponse?.isValidating,
   }
 }

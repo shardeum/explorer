@@ -16,13 +16,7 @@ const header: IColumnProps<Account>[] = [
     key: 'ethAddress',
     value: 'Contract Address',
     render: (val: Account[keyof Account], item: Account) => (
-      <AnchorLink
-        href={`/account/${item?.ethAddress}`}
-        label={val as string}
-        size="small"
-        width={350}
-        ellipsis
-      />
+      <AnchorLink href={`/account/${item?.ethAddress}`} label={val as string} size="small" width={350} ellipsis />
     ),
   },
   {

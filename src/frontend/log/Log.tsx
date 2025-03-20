@@ -17,8 +17,10 @@ export const Log: React.FC = () => {
 
   const { address: addr, topic: tps } = router.query
 
-  const { address, onAddressChange, topic, onTopicChange, onSearch, transactions, total, page, setPage } =
-    useLogHook(String(addr || ''), String(tps || ''))
+  const { address, onAddressChange, topic, onTopicChange, onSearch, transactions, total, page, setPage } = useLogHook(
+    String(addr || ''),
+    String(tps || '')
+  )
 
   return (
     <div className={styles.Log}>

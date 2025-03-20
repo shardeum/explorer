@@ -22,35 +22,17 @@ export const LatestTransactions: React.FC<LatestTransactionsProps> = ({ transact
           <div key={item.txId} className={styles.item}>
             <div className={styles.logo}>Tx</div>
             <div>
-              <AnchorLink
-                href={`/transaction/${item.txHash}`}
-                label={item.txHash}
-                size="small"
-                width={180}
-                ellipsis
-              />
+              <AnchorLink href={`/transaction/${item.txHash}`} label={item.txHash} size="small" width={180} ellipsis />
               <span>{moment(item.timestamp).fromNow()}</span>
             </div>
             <div>
               <div className={styles.row}>
                 <span>From</span>
-                <AnchorLink
-                  href={`/account/${item.txFrom}`}
-                  label={item.txFrom}
-                  size="small"
-                  width={180}
-                  ellipsis
-                />
+                <AnchorLink href={`/account/${item.txFrom}`} label={item.txFrom} size="small" width={180} ellipsis />
               </div>
               <div className={styles.row}>
                 <span>To</span>
-                <AnchorLink
-                  href={`/account/${item.txTo}`}
-                  label={item.txTo}
-                  size="small"
-                  width={180}
-                  ellipsis
-                />
+                <AnchorLink href={`/account/${item.txTo}`} label={item.txTo} size="small" width={180} ellipsis />
               </div>
             </div>
           </div>

@@ -4,10 +4,7 @@ import { Spacer, StackedLineChart } from '../../components'
 
 import styles from './ChartDetail.module.scss'
 import { TransactionStats } from '../../../stats/transactionStats'
-import {
-  convertTransactionStatsToSeriesData,
-  convertValidatorStatsToSeriesData,
-} from '../../utils/transformChartData'
+import { convertTransactionStatsToSeriesData, convertValidatorStatsToSeriesData } from '../../utils/transformChartData'
 import { ValidatorStats } from '../../../stats/validatorStats'
 import { debounce } from '../../utils/debounce'
 import { useRouter } from 'next/router'
@@ -63,11 +60,7 @@ export const ChartDetail: React.FC<ChartDetailProps> = (data) => {
           placeholder={`Marker ${index + 1}`}
         />
         <div className={styles.customColorPicker}>
-          <input
-            type="color"
-            value={marker.color}
-            onChange={(e) => handleColorChange(e.target.value, index)}
-          />
+          <input type="color" value={marker.color} onChange={(e) => handleColorChange(e.target.value, index)} />
         </div>
       </div>
     ))

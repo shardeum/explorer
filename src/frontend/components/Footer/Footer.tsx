@@ -33,8 +33,8 @@ export const Footer: React.FC = () => {
           </div>
           <Spacer space="16" />
           <div className={styles.label}>
-            Shardeum is an EVM-based, linearly scalable smart contract platform that provides low gas fees
-            forever while maintaining true decentralization and solid security through dynamic state sharding.
+            Shardeum is an EVM-based, linearly scalable smart contract platform that provides low gas fees forever while
+            maintaining true decentralization and solid security through dynamic state sharding.
           </div>
         </div>
         <div></div>

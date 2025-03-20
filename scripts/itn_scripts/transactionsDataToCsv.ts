@@ -163,9 +163,7 @@ export async function querytransactionRecordsBetweenTimestamps(
         transactionRecord.wrappedEVMAccount = StringUtils.safeJsonParse(transactionRecord.wrappedEVMAccount)
       })
     }
-    console.log(
-      `transaction between ${start} and ${end} offset ${offset} limit ${limit} --> ${transactions.length}`
-    )
+    console.log(`transaction between ${start} and ${end} offset ${offset} limit ${limit} --> ${transactions.length}`)
     // console.dir(transactions, { depth: null })
     return transactions
   } catch (e) {
@@ -257,9 +255,8 @@ const transformTransaction = (tx: Transaction): any => {
     penaltyAmount:
       tx.wrappedEVMAccount['readableReceipt']?.['penaltyAmount'] &&
       bigIntToHex(tx.wrappedEVMAccount['readableReceipt']?.['penaltyAmount']),
-      violationType:
-      tx.wrappedEVMAccount['readableReceipt']?.['internalTX']?.['violationType'],
-    internalTXType: tx.internalTXType
+    violationType: tx.wrappedEVMAccount['readableReceipt']?.['internalTX']?.['violationType'],
+    internalTXType: tx.internalTXType,
   }
 }
 

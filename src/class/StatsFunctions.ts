@@ -32,10 +32,7 @@ export const insertValidatorStats = async (cycleRecord: CycleRecord): Promise<vo
   await ValidatorStats.insertValidatorStats(validatorsInfo)
 }
 
-export const recordOldValidatorsStats = async (
-  latestCycle: number,
-  lastStoredCycle: number
-): Promise<void> => {
+export const recordOldValidatorsStats = async (latestCycle: number, lastStoredCycle: number): Promise<void> => {
   let combineValidatorsStats: ValidatorStats.ValidatorStats[] = []
   const bucketSize = 100
   let startCycle = lastStoredCycle + 1
@@ -66,10 +63,7 @@ export const recordOldValidatorsStats = async (
   }
 }
 
-export const recordTransactionsStats = async (
-  latestCycle: number,
-  lastStoredCycle: number
-): Promise<void> => {
+export const recordTransactionsStats = async (latestCycle: number, lastStoredCycle: number): Promise<void> => {
   let combineTransactionStats: TransactionStats.TransactionStats[] = []
   const bucketSize = 50
   let startCycle = lastStoredCycle + 1
@@ -95,19 +89,12 @@ export const recordTransactionsStats = async (
         endCycle,
         TransactionSearchType.InternalTxReceipt
       )
-      const granularInternalTransactions = await Transaction.queryInternalTransactionCountByCycles(
-        startCycle,
-        endCycle
-      )
+      const granularInternalTransactions = await Transaction.queryInternalTransactionCountByCycles(startCycle, endCycle)
       for (const cycle of cycles) {
         const txsCycle = transactions.filter((a: { cycle: number }) => a.cycle === cycle.counter)
-        const internalTxsCycle = internalTransactions.filter(
-          (a: { cycle: number }) => a.cycle === cycle.counter
-        )
+        const internalTxsCycle = internalTransactions.filter((a: { cycle: number }) => a.cycle === cycle.counter)
         const stakeTxsCycle = stakeTransactions.filter((a: { cycle: number }) => a.cycle === cycle.counter)
-        const unstakeTxsCycle = unstakeTransactions.filter(
-          (a: { cycle: number }) => a.cycle === cycle.counter
-        )
+        const unstakeTxsCycle = unstakeTransactions.filter((a: { cycle: number }) => a.cycle === cycle.counter)
 
         const granularInternalTxCounts = {
           totalSetGlobalCodeBytesTxs: 0,
@@ -323,7 +310,6 @@ export const recordMissingTransactionStats = async (missingCycles: number[]): Pr
   }
 }
 
-
 export const recordCoinStats = async (latestCycle: number, lastStoredCycle: number): Promise<void> => {
   const bucketSize = 50
   let startCycle = lastStoredCycle + 1
@@ -338,12 +324,8 @@ export const recordCoinStats = async (latestCycle: number, lastStoredCycle: numb
         const transactions = await Transaction.queryTransactionsForCycle(cycle.counter)
 
         // Filter transactions
-        const stakeTransactions = transactions.filter(
-          (a) => a.transactionType === TransactionType.StakeReceipt
-        )
-        const unstakeTransactions = transactions.filter(
-          (a) => a.transactionType === TransactionType.UnstakeReceipt
-        )
+        const stakeTransactions = transactions.filter((a) => a.transactionType === TransactionType.StakeReceipt)
+        const unstakeTransactions = transactions.filter((a) => a.transactionType === TransactionType.UnstakeReceipt)
 
         try {
           // Calculate total staked amount in cycle
@@ -352,9 +334,7 @@ export const recordCoinStats = async (latestCycle: number, lastStoredCycle: numb
               'readableReceipt' in current.wrappedEVMAccount &&
               current.wrappedEVMAccount.readableReceipt?.stakeInfo?.stake
             ) {
-              const stakeAmountBN = new BN(
-                current.wrappedEVMAccount.readableReceipt.stakeInfo.stake.toString()
-              ) // changed to accomodate BigInt instead of Hex string
+              const stakeAmountBN = new BN(current.wrappedEVMAccount.readableReceipt.stakeInfo.stake.toString()) // changed to accomodate BigInt instead of Hex string
               return sum.add(stakeAmountBN)
             } else {
               return sum
@@ -366,9 +346,7 @@ export const recordCoinStats = async (latestCycle: number, lastStoredCycle: numb
               'readableReceipt' in current.wrappedEVMAccount &&
               current.wrappedEVMAccount.readableReceipt?.stakeInfo?.stake
             ) {
-              const unStakeAmountBN = new BN(
-                current.wrappedEVMAccount.readableReceipt.stakeInfo.stake.toString()
-              )
+              const unStakeAmountBN = new BN(current.wrappedEVMAccount.readableReceipt.stakeInfo.stake.toString())
               return sum.add(unStakeAmountBN)
             } else {
               return sum
@@ -522,11 +500,7 @@ export const recordNodeStats = async (latestCycle: number, lastStoredCycle: numb
           Object.keys(cycle.cycleRecord).forEach((key) => {
             // eslint-disable-next-line security/detect-object-injection
             const value = cycle.cycleRecord[key]
-            if (
-              Array.isArray(value) &&
-              !key.toLowerCase().includes('archivers') &&
-              !statesToIgnore.includes(key)
-            ) {
+            if (Array.isArray(value) && !key.toLowerCase().includes('archivers') && !statesToIgnore.includes(key)) {
               // pre-Id states containing complex object list
               if (key == 'joinedConsensors') {
                 value.forEach((item: JoinedConsensor) => {
@@ -604,18 +578,12 @@ export const recordNodeStats = async (latestCycle: number, lastStoredCycle: numb
             if (existingNodeStats) {
               /* prettier-ignore */ if (config.verbose) console.log(`existingNodeStats: `, existingNodeStats)
               // node statistics exists, update node statistics record
-              const updatedNodeStats = updateNodeStats(
-                existingNodeStats,
-                { state: nodeState },
-                cycle.cycleRecord.start
-              )
+              const updatedNodeStats = updateNodeStats(existingNodeStats, { state: nodeState }, cycle.cycleRecord.start)
               /* prettier-ignore */ if (config.verbose) console.log(`updatedNodeStats: `, updatedNodeStats)
               await NodeStats.insertOrUpdateNodeStats(updatedNodeStats)
               updatedNodeStatsCombined.push(updatedNodeStats)
             } else {
-              console.warn(
-                `Node statistics record not found for node with Id: ${nodeId} and state ${nodeState}`
-              )
+              console.warn(`Node statistics record not found for node with Id: ${nodeId} and state ${nodeState}`)
             }
           }
           pubKeyToStateMap.clear()
@@ -645,9 +613,6 @@ export const patchStatsBetweenCycles = async (startCycle: number, endCycle: numb
   await recordNodeStats(endCycle, startCycle - 1)
 }
 
-export async function insertOrUpdateMetadata(
-  type: Metadata.MetadataType,
-  latestCycleNumber: number
-): Promise<void> {
+export async function insertOrUpdateMetadata(type: Metadata.MetadataType, latestCycleNumber: number): Promise<void> {
   await Metadata.insertOrUpdateMetadata({ type, cycleNumber: latestCycleNumber })
 }

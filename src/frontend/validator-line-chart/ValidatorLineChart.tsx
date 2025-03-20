@@ -22,12 +22,7 @@ export const ValidatorLineChart: React.FC = () => {
       <ContentLayout title="Active Validators per Cycle Chart">
         <div style={{ marginBottom: '1rem' }}>
           <label>
-            <input
-              type="checkbox"
-              checked={refreshEnabled}
-              onChange={toggleNoRefresh}
-              style={{ appearance: 'auto' }}
-            />
+            <input type="checkbox" checked={refreshEnabled} onChange={toggleNoRefresh} style={{ appearance: 'auto' }} />
             <span> Auto Refresh</span>
           </label>
         </div>

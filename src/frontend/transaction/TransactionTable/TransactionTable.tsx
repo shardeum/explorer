@@ -70,9 +70,7 @@ const tempHeader: IColumnProps<ReadableReceipt | Transaction | TokenTx | Origina
 export const TransactionTable: React.FC<ITransactionTable> = (props) => {
   const { data, txType = TransactionSearchType.All } = props
 
-  const [header, setHeader] = useState<
-    IColumnProps<ReadableReceipt | Transaction | TokenTx | OriginalTxData>[]
-  >([])
+  const [header, setHeader] = useState<IColumnProps<ReadableReceipt | Transaction | TokenTx | OriginalTxData>[]>([])
 
   useEffect(() => {
     let tHeader: IColumnProps<ReadableReceipt | Transaction | TokenTx | OriginalTxData>[] = []

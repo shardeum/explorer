@@ -26,9 +26,7 @@ export const coinStatsCacheRecord: CacheRecordPerCycle<any> = {
       return new Error(err)
     }
     console.log(
-      `Updating coin stats cache for cycle ${latestCycleNumber}, cache data: ${StringUtils.safeStringify(
-        data
-      )}`
+      `Updating coin stats cache for cycle ${latestCycleNumber}, cache data: ${StringUtils.safeStringify(data)}`
     )
     this.lastUpdatedCycle = latestCycleNumber
     this.data = data

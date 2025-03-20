@@ -23,12 +23,7 @@ export const SortButton: React.FC<SortButtonProps> = ({ isUp, onSort }) => {
     <>
       <button onClick={onClick} className={styles.SortButton} data-tip="Click to sort" data-for="sb">
         <Icon name="triangle_up" color={isUp ? 'black' : 'disabled'} size="tiny" className={styles.iconUp} />
-        <Icon
-          name="triangle_down"
-          color={isUp ? 'disabled' : 'black'}
-          size="tiny"
-          className={styles.iconDown}
-        />
+        <Icon name="triangle_down" color={isUp ? 'disabled' : 'black'} size="tiny" className={styles.iconDown} />
       </button>
       <ReactTooltip effect="solid" backgroundColor="#6610f2" id="sb" />
     </>

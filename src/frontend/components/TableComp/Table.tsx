@@ -52,9 +52,5 @@ export function TableHeaderItem({ value }: { value: string | ReactNode }): React
 export function TableBodyItem<T>({ col, row }: ITableBody<T>): ReactNode {
   const value = get(row, col.key)
 
-  return (
-    <td style={col.maxChar ? { maxWidth: col.maxChar } : {}}>
-      {col?.render ? col.render(value, row) : value}
-    </td>
-  )
+  return <td style={col.maxChar ? { maxWidth: col.maxChar } : {}}>{col?.render ? col.render(value, row) : value}</td>
 }

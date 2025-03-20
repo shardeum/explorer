@@ -24,10 +24,7 @@ export const DetailCard: React.FC<DetailCardProps> = (props) => {
         {titleRight && titleRight}
       </div>
       {items.map((item, index) => (
-        <div
-          className={cx(styles.row, items.length === index + 1 && styles.last)}
-          key={`${index}-${item.key}`}
-        >
+        <div className={cx(styles.row, items.length === index + 1 && styles.last)} key={`${index}-${item.key}`}>
           <div className={styles.title}>{item.key}</div>
           <div className={styles.value}>{item.value}</div>
         </div>

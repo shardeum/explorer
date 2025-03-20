@@ -17,10 +17,6 @@
     "jsx": "preserve",
     "types": ["node", "jest", "@testing-library/jest-dom"]
   },
-  "include": [
-    "src/*"
-  ],
-  "exclude": [
-    "dist"
-  ]
+  "include": ["src/*"],
+  "exclude": ["dist"]
 }

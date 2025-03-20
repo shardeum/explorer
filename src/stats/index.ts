@@ -6,9 +6,7 @@ export const initializeStatsDB = async (): Promise<void> => {
     'CREATE TABLE if not exists `validators` (`cycle` NUMBER NOT NULL UNIQUE PRIMARY KEY, `active` NUMBER NOT NULL, `activated` NUMBER NOT NULL, `syncing` NUMBER NOT NULL, `joined` NUMBER NOT NULL, `removed` NUMBER NOT NULL, `apoped` NUMBER NOT NULL, `timestamp` BIGINT NOT NULL)'
   )
   // await db.runCreate('Drop INDEX if exists `validators_idx`');
-  await db.runCreate(
-    'CREATE INDEX if not exists `validators_idx` ON `validators` (`cycle` DESC, `timestamp` DESC)'
-  )
+  await db.runCreate('CREATE INDEX if not exists `validators_idx` ON `validators` (`cycle` DESC, `timestamp` DESC)')
   await db.runCreate(`
     CREATE TABLE if not exists transactions (
       cycle NUMBER NOT NULL UNIQUE PRIMARY KEY, 
@@ -31,17 +29,13 @@ export const initializeStatsDB = async (): Promise<void> => {
     )`)
 
   // await db.runCreate('Drop INDEX if exists `transactions_idx`');
-  await db.runCreate(
-    'CREATE INDEX if not exists `transactions_idx` ON `transactions` (`cycle` DESC, `timestamp` DESC)'
-  )
+  await db.runCreate('CREATE INDEX if not exists `transactions_idx` ON `transactions` (`cycle` DESC, `timestamp` DESC)')
 
   await db.runCreate(
     'CREATE TABLE if not exists `coin_stats` (`cycle` NUMBER NOT NULL UNIQUE PRIMARY KEY, `totalSupplyChange` BIGINT NOT NULL, `totalStakeChange` BIGINT NOT NULL, `timestamp` BIGINT NOT NULL)'
   )
   // await db.runCreate('Drop INDEX if exists `coin_stats_idx`');
-  await db.runCreate(
-    'CREATE INDEX if not exists `coin_stats_idx` ON `coin_stats` (`cycle` DESC, `timestamp` DESC)'
-  )
+  await db.runCreate('CREATE INDEX if not exists `coin_stats_idx` ON `coin_stats` (`cycle` DESC, `timestamp` DESC)')
 
   await db.runCreate(
     `CREATE TABLE IF NOT EXISTS node_stats (

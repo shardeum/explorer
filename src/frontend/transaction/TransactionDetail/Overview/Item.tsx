@@ -14,15 +14,7 @@ interface ItemProps {
   type: string
   contractAddress: string
 }
-export const Item: React.FC<ItemProps> = ({
-  from,
-  to,
-  tokenId,
-  tokenValue,
-  token,
-  type,
-  contractAddress,
-}) => {
+export const Item: React.FC<ItemProps> = ({ from, to, tokenId, tokenValue, token, type, contractAddress }) => {
   return (
     <div className={styles.Overivew_Item}>
       <div className={styles.listItem}>

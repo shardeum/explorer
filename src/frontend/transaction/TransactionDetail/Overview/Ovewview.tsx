@@ -61,9 +61,7 @@ export const Ovewview: React.FC<OvewviewProps> = ({ transaction }) => {
                   <span>For</span>
                   <div>{calculateTokenValue(item, item.tokenType, undefined, true)}&nbsp;</div>
                   <Link href={`/account/${item.contractAddress}`} className={styles.anchor}>
-                    {item.tokenType === TokenType.EVM_Internal
-                      ? 'SHM'
-                      : item.contractInfo.name || item.contractAddress}
+                    {item.tokenType === TokenType.EVM_Internal ? 'SHM' : item.contractInfo.name || item.contractAddress}
                   </Link>
                 </div>
               ))}
@@ -179,10 +177,7 @@ export const Ovewview: React.FC<OvewviewProps> = ({ transaction }) => {
               <div className={styles.item}>
                 <div className={styles.title}>From:</div>
                 <div className={styles.value}>
-                  <Link
-                    href={`/account/${transaction?.originalTxData?.readableReceipt?.from}`}
-                    className={styles.link}
-                  >
+                  <Link href={`/account/${transaction?.originalTxData?.readableReceipt?.from}`} className={styles.link}>
                     {transaction?.originalTxData?.readableReceipt?.from}
                   </Link>
                 </div>
@@ -192,10 +187,7 @@ export const Ovewview: React.FC<OvewviewProps> = ({ transaction }) => {
                 <div className={styles.title}>To:</div>
                 <div className={styles.value}>
                   {transaction?.originalTxData?.readableReceipt?.to ? (
-                    <Link
-                      href={`/account/${transaction?.originalTxData?.readableReceipt?.to}`}
-                      className={styles.link}
-                    >
+                    <Link href={`/account/${transaction?.originalTxData?.readableReceipt?.to}`} className={styles.link}>
                       {transaction?.originalTxData?.readableReceipt?.to}
                     </Link>
                   ) : (
@@ -228,9 +220,9 @@ export const Ovewview: React.FC<OvewviewProps> = ({ transaction }) => {
                       <div className={styles.title}>Stake Amount:</div>
                       <div className={styles.value}>
                         {calculateFullValue(
-                          `0x${Number(
-                            transaction?.originalTxData?.readableReceipt?.internalTxData?.stake
-                          ).toString(16)}`
+                          `0x${Number(transaction?.originalTxData?.readableReceipt?.internalTxData?.stake).toString(
+                            16
+                          )}`
                         )}{' '}
                         SHM
                       </div>
@@ -332,10 +324,7 @@ export const Ovewview: React.FC<OvewviewProps> = ({ transaction }) => {
                 <div className={styles.item}>
                   <div className={styles.title}>Stake Amount:</div>
                   <div className={styles.value}>
-                    {calculateFullValue(
-                      `0x${transaction?.wrappedEVMAccount?.readableReceipt?.stakeInfo?.stake}`
-                    )}{' '}
-                    SHM
+                    {calculateFullValue(`0x${transaction?.wrappedEVMAccount?.readableReceipt?.stakeInfo?.stake}`)} SHM
                   </div>
                 </div>
               ) : (
@@ -343,19 +332,14 @@ export const Ovewview: React.FC<OvewviewProps> = ({ transaction }) => {
                   <div className={styles.item}>
                     <div className={styles.title}>Reward:</div>
                     <div className={styles.value}>
-                      {calculateFullValue(
-                        `0x${transaction?.wrappedEVMAccount?.readableReceipt?.stakeInfo?.reward}`
-                      )}{' '}
+                      {calculateFullValue(`0x${transaction?.wrappedEVMAccount?.readableReceipt?.stakeInfo?.reward}`)}{' '}
                       SHM
                     </div>
                   </div>
                   <div className={styles.item}>
                     <div className={styles.title}>Stake Amount:</div>
                     <div className={styles.value}>
-                      {calculateFullValue(
-                        `0x${transaction?.wrappedEVMAccount?.readableReceipt?.stakeInfo?.stake}`
-                      )}{' '}
-                      SHM
+                      {calculateFullValue(`0x${transaction?.wrappedEVMAccount?.readableReceipt?.stakeInfo?.stake}`)} SHM
                     </div>
                   </div>
                   <div className={styles.item}>

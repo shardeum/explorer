@@ -60,12 +60,7 @@ export const TokenDropdown: React.FC<TokenDropdownProps> = (props) => {
         {
           tokens && tokens.length > 0 ? (
             tokens?.map((row, index) => (
-              <MenuItem
-                key={index}
-                label={row.balance}
-                label2={row?.contractInfo.name}
-                className={styles.menuItem}
-              />
+              <MenuItem key={index} label={row.balance} label2={row?.contractInfo.name} className={styles.menuItem} />
             ))
           ) : (
             <div className={styles.empty}>No Tokens Found!</div>
