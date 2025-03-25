@@ -6,7 +6,7 @@ import { isDeepStrictEqual } from 'util'
 import { writeFileSync } from 'fs'
 crypto.init(config.hashKey)
 
-const API_SERVER_URL = 'http:/127.0.0.1:6001'
+const API_SERVER_URL = 'http://127.0.0.1:6001'
 
 const startCycle = 0
 const endCycle = 0
