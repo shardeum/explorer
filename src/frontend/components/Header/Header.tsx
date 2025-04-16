@@ -23,14 +23,14 @@ export const Header: React.FC<Record<string, never>> = () => {
   const navLinks = [
     { key: '/', value: 'Home' },
     {
-      key: 'betanet',
-      value: 'About Betanet',
+      key: 'mainnet',
+      value: 'About Mainnet',
       render: () => {
         return (
           <TopBarDropdown
             label=""
             options={[
-              { key: 'https://shardeum.org/betanet', value: 'Shardeum Betanet' },
+              { key: 'https://shardeum.org/', value: 'Shardeum Mainnet' },
               { key: 'https://docs.shardeum.org/docs/node/run/validator', value: 'Run a validator node' },
             ]}
           />
