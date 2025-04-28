@@ -6,7 +6,7 @@ import web3 from 'web3'
 import { Chip, Icon } from '../../../components'
 import { Item } from './Item'
 
-import { TokenType, Transaction, TransactionType } from '../../../../types'
+import { InternalTXType, TokenType, Transaction, TransactionType } from '../../../../types'
 import { showTxMethod } from '../../../utils/showMethod'
 
 import styles from './Ovewview.module.scss'
@@ -19,6 +19,10 @@ interface OvewviewProps {
 }
 
 export const Ovewview: React.FC<OvewviewProps> = ({ transaction }) => {
+  const isInternalTx = transaction?.transactionType === TransactionType.InternalTxReceipt
+  const internalTxType = isInternalTx
+    ? transaction.wrappedEVMAccount?.readableReceipt?.internalTx?.internalTXType
+    : undefined
   const renderErc20Tokens = (): JSX.Element | undefined => {
     const items = transaction?.tokenTxs
 
@@ -272,13 +276,15 @@ export const Ovewview: React.FC<OvewviewProps> = ({ transaction }) => {
             </div>
           </div>
 
-          <div className={styles.item}>
-            <div className={styles.title}>Nonce:</div>
-            <div className={styles.value}>
-              {transaction?.wrappedEVMAccount?.readableReceipt?.nonce &&
-                web3.utils.hexToNumber(transaction?.wrappedEVMAccount?.readableReceipt?.nonce)}
+          {!isInternalTx && (
+            <div className={styles.item}>
+              <div className={styles.title}>Nonce:</div>
+              <div className={styles.value}>
+                {transaction?.wrappedEVMAccount?.readableReceipt?.nonce &&
+                  web3.utils.hexToNumber(transaction?.wrappedEVMAccount?.readableReceipt?.nonce)}
+              </div>
             </div>
-          </div>
+          )}
 
           <div className={styles.item}>
             <div className={styles.title}>From:</div>
@@ -356,26 +362,43 @@ export const Ovewview: React.FC<OvewviewProps> = ({ transaction }) => {
             </>
           )}
 
-          <div className={styles.item}>
-            <div className={styles.title}>Value:</div>
-            <div className={styles.value}>
-              {calculateFullValue(`${transaction?.wrappedEVMAccount?.readableReceipt?.value}`)} SHM
+          {internalTxType === InternalTXType.TransferFromSecureAccount && (
+            <div className={styles.item}>
+              <div className={styles.title}>Value:</div>
+              <div className={styles.value}>
+                {calculateFullValue(`${transaction?.wrappedEVMAccount?.amountSpent}` || '0')} SHM
+              </div>
             </div>
-          </div>
+          )}
 
-          <div className={styles.item}>
-            <div className={styles.title}>Transaction Fee:</div>
-            <div className={styles.value}>
-              {calculateFullValue(`${transaction?.wrappedEVMAccount?.amountSpent}` || '0')}
+          {!isInternalTx && (
+            <div className={styles.item}>
+              <div className={styles.title}>Value:</div>
+              <div className={styles.value}>
+                {calculateFullValue(`${transaction?.wrappedEVMAccount?.readableReceipt?.value}`)} SHM
+              </div>
             </div>
-          </div>
+          )}
 
-          <div className={styles.item}>
-            <div className={styles.title}>Gas Used:</div>
-            <div className={styles.value}>
-              {parseInt(transaction?.wrappedEVMAccount?.readableReceipt?.gasUsed || '0')}
+          {internalTxType !== InternalTXType.TransferFromSecureAccount &&
+            internalTxType !== InternalTXType.ChangeNetworkParam &&
+            internalTxType !== InternalTXType.ChangeConfig && (
+              <div className={styles.item}>
+                <div className={styles.title}>Transaction Fee:</div>
+                <div className={styles.value}>
+                  {calculateFullValue(`${transaction?.wrappedEVMAccount?.amountSpent}` || '0')}
+                </div>
+              </div>
+            )}
+
+          {!isInternalTx && (
+            <div className={styles.item}>
+              <div className={styles.title}>Gas Used:</div>
+              <div className={styles.value}>
+                {parseInt(transaction?.wrappedEVMAccount?.readableReceipt?.gasUsed || '0')}
+              </div>
             </div>
-          </div>
+          )}
 
           {transaction?.wrappedEVMAccount?.readableReceipt?.reason && (
             <div className={styles.item}>

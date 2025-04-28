@@ -1,4 +1,4 @@
-import { Transaction, TokenTx, TransactionType, OriginalTxData } from '../../types'
+import { InternalTXType, OriginalTxData, TokenTx, Transaction, TransactionType } from '../../types'
 
 export const showTxMethod = (tx: Transaction | TokenTx | OriginalTxData): string => {
   let data = 'wrappedEVMAccount' in tx ? tx.wrappedEVMAccount?.readableReceipt?.data : null
@@ -11,6 +11,12 @@ export const showTxMethod = (tx: Transaction | TokenTx | OriginalTxData): string
   }
   return 'tokenEvent' in tx && tx?.tokenEvent
     ? tx.tokenEvent
+    : isInternalTx(tx) && 'internalTXType' in tx && tx?.internalTXType === InternalTXType.TransferFromSecureAccount
+    ? 'Transfer From Secure Account'
+    : isInternalTx(tx) && 'internalTXType' in tx && tx?.internalTXType === InternalTXType.ChangeNetworkParam
+    ? 'Change Network Param'
+    : isInternalTx(tx) && 'internalTXType' in tx && tx?.internalTXType === InternalTXType.ChangeConfig
+    ? 'Change Config'
     : 'wrappedEVMAccount' in tx && tx?.wrappedEVMAccount?.readableReceipt.from.length === 64
     ? 'Node Reward'
     : 'transactionType' in tx && tx?.transactionType && tx?.transactionType === TransactionType.StakeReceipt
@@ -32,6 +38,10 @@ export const showTxMethod = (tx: Transaction | TokenTx | OriginalTxData): string
       ? ERC_TOKEN_METHOD_DIC[methodCode]
       : methodCode
     : 'Contract Creation'
+}
+
+const isInternalTx = (tx: Transaction | TokenTx | OriginalTxData): boolean => {
+  return 'transactionType' in tx && tx?.transactionType && tx?.transactionType === TransactionType.InternalTxReceipt
 }
 
 export const ERC_TOKEN_METHOD_DIC = {
