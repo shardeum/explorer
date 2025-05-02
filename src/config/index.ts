@@ -35,7 +35,7 @@ export const config = {
   rpcUrl: process.env.RPC_URL || 'http://127.0.0.1:8080',
   apiUrl: '',
   verbose: false,
-  genesisSHMSupply: 100000000,
+  genesisSHMSupply: 249000000,
   dbPath: process.env.DB_PATH?.replace(/\/+$/, '') || '.', // remove
   rateLimit: 100,
   GTM_Id: '',
