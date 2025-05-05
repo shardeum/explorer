@@ -55,7 +55,7 @@ export const Footer: React.FC = () => {
       <hr />
       <div className={styles.social}>
         <div>
-          <span>Shardeum</span> © 2023
+          <span>Shardeum</span> © {new Date().getFullYear()}
         </div>
         <div className={styles.wrapper}>
           {socials.map((social, index) => (
