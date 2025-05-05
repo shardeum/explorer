@@ -148,7 +148,7 @@ const start = async (): Promise<void> => {
   })
   Storage.addExitListeners(server)
 
-  // await server.register(FastifyWebsocket)
+  await server.register(FastifyWebsocket)
   await server.register(fastifyCors)
   await server.register(fastifyRateLimit, {
     max: CONFIG.rateLimit,
