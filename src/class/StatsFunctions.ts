@@ -5,7 +5,7 @@ import * as NodeStats from '../stats/nodeStats'
 import * as Metadata from '../stats/metadata'
 import * as Cycle from '../storage/cycle'
 import * as Transaction from '../storage/transaction'
-import { InternalTXType, TransactionSearchType, TransactionType } from '../types'
+import { InternalTXType, TransactionSearchType, TransactionType, WrappedDataReceipt } from '../types'
 import BN from 'bn.js'
 import BigNumber from 'decimal.js'
 import { CycleRecord } from '@shardeum-foundation/lib-types/build/src/p2p/CycleCreatorTypes'
@@ -378,7 +378,16 @@ export const recordCoinStats = async (latestCycle: number, lastStoredCycle: numb
           }, new BN(0))
           // Calculate total gas burnt in cycle
           const gasBurnt = transactions.reduce((sum, current) => {
-            if ('amountSpent' in current.wrappedEVMAccount && current.wrappedEVMAccount.amountSpent) {
+            const isInternalTx = current.transactionType === TransactionType.InternalTxReceipt
+            const internalTxType = isInternalTx
+              ? (current.wrappedEVMAccount as WrappedDataReceipt)?.readableReceipt?.internalTx?.internalTXType
+              : undefined
+            // ignore amountSpent for InternalTxType.TransferFromSecureAccount because it is not a gas fee but actually the value
+            if (
+              'amountSpent' in current.wrappedEVMAccount &&
+              current.wrappedEVMAccount.amountSpent &&
+              internalTxType !== InternalTXType.TransferFromSecureAccount
+            ) {
               // remove prefix 0x from amountSpent hex string
               const amountSpentBN = new BN(current.wrappedEVMAccount.amountSpent.substring(2), 16)
               return sum.add(amountSpentBN)
