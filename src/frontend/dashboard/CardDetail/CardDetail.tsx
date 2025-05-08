@@ -45,15 +45,6 @@ export const CardDetail: React.FC<CardDetailProps> = (data) => {
           </div>
         </div>
         <hr />
-        <div className={styles.item}>
-          <div className={styles.icon}>
-            <Icon name="standby" size="medium" color="primary" />
-          </div>
-          <div>
-            <p className={styles.title}>Standby Nodes</p>
-            <p>{data?.totalStandby?.toLocaleString('en-US')}</p>
-          </div>
-        </div>
       </div>
       <div className={styles.column}>
         <Link href="/account">
@@ -64,18 +55,6 @@ export const CardDetail: React.FC<CardDetailProps> = (data) => {
             <div>
               <p className={styles.title}>Total Accounts</p>
               <p>{data?.totalAccounts?.toLocaleString()}</p>
-            </div>
-          </div>
-        </Link>
-        <hr />
-        <Link href="/contract">
-          <div className={styles.item}>
-            <div className={styles.icon}>
-              <Icon name="contract" size="medium" color="primary" />
-            </div>
-            <div>
-              <p className={styles.title}>Total Contracts</p>
-              <p>{data?.totalContracts?.toLocaleString()}</p>
             </div>
           </div>
         </Link>
@@ -91,7 +70,19 @@ export const CardDetail: React.FC<CardDetailProps> = (data) => {
             </div>
           </div>
         </Link>
+
+        <hr />
+        <div className={styles.item}>
+          <div className={styles.icon}>
+            <Icon name="standby" size="medium" color="primary" />
+          </div>
+          <div>
+            <p className={styles.title}>Standby Nodes</p>
+            <p>{data?.totalStandby?.toLocaleString('en-US')}</p>
+          </div>
+        </div>
       </div>
+
       <div className={styles.column}>
         <Link href="/transaction">
           <div className={styles.item}>
@@ -107,18 +98,6 @@ export const CardDetail: React.FC<CardDetailProps> = (data) => {
           </div>
         </Link>
         <hr />
-        <Link href="/account">
-          <div className={styles.item}>
-            <div className={styles.icon}>
-              <Icon name="reward" size="medium" color="primary" />
-            </div>
-            <div>
-              <p className={styles.title}>Total SHM</p>
-              <p>{data?.totalSHM?.toLocaleString('en-US')}</p>
-            </div>
-          </div>
-        </Link>
-        <hr />
         <Link href="/transaction">
           <div className={styles.item}>
             <div className={styles.icon}>
@@ -130,6 +109,7 @@ export const CardDetail: React.FC<CardDetailProps> = (data) => {
             </div>
           </div>
         </Link>
+        <hr />
       </div>
     </div>
   )
