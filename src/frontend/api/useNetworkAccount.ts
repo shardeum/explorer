@@ -9,10 +9,12 @@ export type NetworkAccountResult = {
 }
 
 export const useNetworkAccount = (): NetworkAccountResult => {
-  const { data } = useSWR<NetworkAccount>(PATHS.NETWORK_ACCOUNT, fetcher, { refreshInterval: 10000 })
+  const { data } = useSWR<{
+    networkAccount: NetworkAccount
+  }>(PATHS.NETWORK_ACCOUNT, fetcher, { refreshInterval: 10000 })
 
   return {
-    networkAccount: data,
+    networkAccount: data?.networkAccount,
     loading: !data,
   }
 }
