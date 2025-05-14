@@ -1211,9 +1211,9 @@ const start = async (): Promise<void> => {
         })
       }
 
-      const networkAccount = (await Account.queryAccountByAccountId(NETWORK_ACCOUNT_ID)) as unknown as NetworkAccount
+      const networkAccount = await Account.queryAccountByAccountId(NETWORK_ACCOUNT_ID)
       cachedNetworkAccount = {
-        account: networkAccount,
+        account: networkAccount.account as unknown as NetworkAccount,
         timestamp: Date.now(),
       }
 
