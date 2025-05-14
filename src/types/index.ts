@@ -7,6 +7,36 @@ export interface NetworkParameters {
   stakeRequired: number
   maintenanceInterval: number
   maintenanceFee: number
+  stabilityScaleMul: number
+  stabilityScaleDiv: number
+  minVersion: string
+  activeVersion: string
+  latestVersion: string
+  archiver: {
+    minVersion: string
+    activeVersion: string
+    latestVersion: string
+  }
+  txPause: boolean
+  certCycleDuration: number
+  enableNodeSlashing: boolean
+  qa: {
+    qaTestNumber: number
+    qaTestBoolean: boolean
+    qaTestPercent: number
+    qaTestSemver: string
+  }
+  slashing: {
+    enableLeftNetworkEarlySlashing: boolean
+    enableSyncTimeoutSlashing: boolean
+    enableNodeRefutedSlashing: boolean
+    leftNetworkEarlyPenaltyPercent: number
+    syncTimeoutPenaltyPercent: number
+    nodeRefutedPenaltyPercent: number
+  }
+  enableRPCEndpoints: boolean
+  stakeLockTime: number
+  chainID: number
 }
 
 export enum DistributorSocketCloseCodes {

@@ -29,6 +29,7 @@ import {
   TransactionSearchType,
   TxMethodFilter,
   WrappedDataReceipt,
+  NetworkAccount,
 } from './types'
 import * as utils from './utils'
 // config variables
@@ -57,6 +58,7 @@ import { healthCheckRouter } from './routes/healthCheck'
 
 crypto.init('69fa4195670576c0160d660c3be36556ff8d504725be8a59b5a96509e0c994bc')
 crypto.setCustomStringifier(StringUtils.safeStringify, 'shardus_safeStringify')
+const NETWORK_ACCOUNT_ID = '1000000000000000000000000000000000000000000000000000000000000001';
 
 if (process.env.PORT) {
   CONFIG.port.server = process.env.PORT
@@ -139,6 +141,7 @@ async function getLatestCycleNumber(): Promise<number> {
 
 // Setup Log Directory
 const start = async (): Promise<void> => {
+  let cachedNetworkAccount: { account: NetworkAccount; timestamp: number } | undefined = undefined
   await Storage.initializeDB()
   await StatsStorage.initializeStatsDB()
 
@@ -1193,6 +1196,35 @@ const start = async (): Promise<void> => {
       }
     }
     reply.send(res)
+  })
+
+  server.get('/api/networkAccount', async (_request, reply) => {
+    try {
+      if (
+        cachedNetworkAccount &&
+        cachedNetworkAccount.account &&
+        Date.now() - cachedNetworkAccount.timestamp < config.networkAccountCacheInterval
+      ) {
+        return reply.send({
+          success: true,
+          networkAccount: cachedNetworkAccount.account,
+        })
+      }
+
+      const networkAccount = (await Account.queryAccountByAccountId(NETWORK_ACCOUNT_ID)) as unknown as NetworkAccount
+      cachedNetworkAccount = {
+        account: networkAccount,
+        timestamp: Date.now(),
+      }
+
+      return reply.send({ success: true, networkAccount })
+    } catch (error) {
+      console.error('Error fetching network account:', error)
+      return reply.status(500).send({
+        success: false,
+        error: 'Failed to retrieve network account',
+      })
+    }
   })
 
   server.get('/api/log', async (_request, reply) => {
