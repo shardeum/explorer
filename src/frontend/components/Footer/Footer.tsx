@@ -6,6 +6,7 @@ import { Icon, iconTypes } from '../Icon'
 import { Spacer } from '../Spacer'
 
 import styles from './Footer.module.scss'
+import { useNetworkAccount } from '../../api/useNetworkAccount'
 
 const resources = [
   { href: 'https://shardeum.org', label: 'About Shardeum' },
@@ -21,6 +22,7 @@ const socials = [
 ]
 
 export const Footer: React.FC = () => {
+  const { networkAccount } = useNetworkAccount()
   return (
     <div className={styles.Footer}>
       <div className={styles.main}>
@@ -56,6 +58,7 @@ export const Footer: React.FC = () => {
       <div className={styles.social}>
         <div>
           <span>Shardeum</span> © {new Date().getFullYear()}
+          <div className={styles.version}>Network Version: {networkAccount?.current?.minVersion}</div>
         </div>
         <div className={styles.wrapper}>
           {socials.map((social, index) => (

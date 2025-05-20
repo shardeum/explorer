@@ -50,6 +50,7 @@ export const config = {
   },
   DISTRIBUTOR_RECONNECT_INTERVAL: 10_000, // in ms
   CONNECT_TO_DISTRIBUTOR_MAX_RETRY: 10,
+  networkAccountCacheInterval: 1000 * 60 * 10, // 10 minutes
   explorerMode: process.env.EXPLORER_MODE || explorerMode.WS.toString(),
   storeReceiptBeforeStates: false,
   aggregatorBackFill: {
