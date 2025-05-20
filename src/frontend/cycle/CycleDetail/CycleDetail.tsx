@@ -43,10 +43,10 @@ export const CycleDetail: React.FC = () => {
               <div className={styles.value}>{data?.cycleRecord?.networkId}</div>
             </div>
 
-            <div className={styles.item}>
-              <div className={styles.title}>Network State Hash</div>
-              <div className={styles.value}>{data?.cycleRecord?.networkStateHash || '-'}</div>
-            </div>
+            {/*<div className={styles.item}>*/}
+            {/*  <div className={styles.title}>Network State Hash</div>*/}
+            {/*  <div className={styles.value}>{data?.cycleRecord?.networkStateHash || '-'}</div>*/}
+            {/*</div>*/}
 
             <div className={styles.item}>
               <div className={styles.title}>Cycle Number</div>
