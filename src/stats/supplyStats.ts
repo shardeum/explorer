@@ -49,7 +49,7 @@ export async function calculateSecureAccountsBalance(): Promise<number> {
       WHERE LOWER(ethAddress) IN (${placeholders})
     `
     
-    const results = await db.all(sql, config.secureAccounts.map(acc => acc.toLowerCase()))
+    const results: Array<{ balance: string }> = await db.all(sql, config.secureAccounts.map(acc => acc.toLowerCase()))
     
     let totalBalanceShm = 0
     for (const row of results) {
@@ -70,7 +70,7 @@ export async function calculateSecureAccountsBalance(): Promise<number> {
 export async function getCachedSupplyStats(): Promise<SupplyStatsCache | null> {
   try {
     const sql = `SELECT * FROM supply_stats_cache ORDER BY lastCycle DESC LIMIT 1`
-    const cache = await statsDb.get(sql)
+    const cache: SupplyStatsCache | undefined = await statsDb.get(sql)
     return cache || null
   } catch (e) {
     console.error('Error getting cached supply stats:', e)
@@ -109,14 +109,14 @@ export async function calculateTotalShmRewardedFromCycle(startCycle?: number): P
       AND internalTXType = ?
       AND json_extract(wrappedEVMAccount, '$.readableReceipt.status') = 1
     `
-    const params = [TransactionType.InternalTxReceipt, InternalTXType.ClaimReward]
+    const params: any[] = [TransactionType.InternalTxReceipt, InternalTXType.ClaimReward]
     
     if (startCycle !== undefined) {
       sql += ` AND cycle > ?`
       params.push(startCycle)
     }
     
-    const results = await db.all(sql, params)
+    const results: Array<{ rewardAmount: string }> = await db.all(sql, params)
     
     let totalRewardedShm = 0
     for (const row of results) {
@@ -146,7 +146,7 @@ export async function calculateTotalShmBurnedFromCycle(startCycle?: number): Pro
       WHERE json_extract(wrappedEVMAccount, '$.readableReceipt.status') = 1
       AND transactionType IN (?, ?, ?)
     `
-    const regularTxParams = [
+    const regularTxParams: any[] = [
       TransactionType.Receipt,
       TransactionType.StakeReceipt,
       TransactionType.UnstakeReceipt
@@ -157,7 +157,7 @@ export async function calculateTotalShmBurnedFromCycle(startCycle?: number): Pro
       regularTxParams.push(startCycle)
     }
     
-    const regularTxResult = await db.get(regularTxSql, regularTxParams)
+    const regularTxResult: { totalBurned: number } | undefined = await db.get(regularTxSql, regularTxParams)
     
     const regularTxBurnedWei = regularTxResult?.totalBurned || 0
     totalBurnedShm += regularTxBurnedWei / 1e18
@@ -169,7 +169,7 @@ export async function calculateTotalShmBurnedFromCycle(startCycle?: number): Pro
       AND internalTXType != ?
       AND json_extract(wrappedEVMAccount, '$.readableReceipt.status') = 1
     `
-    const internalTxParams = [
+    const internalTxParams: any[] = [
       TransactionType.InternalTxReceipt,
       InternalTXType.TransferFromSecureAccount
     ]
@@ -179,7 +179,7 @@ export async function calculateTotalShmBurnedFromCycle(startCycle?: number): Pro
       internalTxParams.push(startCycle)
     }
     
-    const internalTxResults = await db.all(internalTxSql, internalTxParams)
+    const internalTxResults: Array<{ amountSpent: string }> = await db.all(internalTxSql, internalTxParams)
     
     for (const row of internalTxResults) {
       if (row.amountSpent) {
@@ -218,10 +218,12 @@ export async function updateSupplyStatsCache(): Promise<void> {
     } else if (!cache) {
       if (config.verbose) console.log('No cache found, calculating supply stats from scratch')
       
-      [totalShmRewarded, totalShmBurned] = await Promise.all([
+      const results = await Promise.all([
         calculateTotalShmRewardedFromCycle(0),
         calculateTotalShmBurnedFromCycle(0)
       ])
+      totalShmRewarded = results[0]
+      totalShmBurned = results[1]
     } else {
       if (config.verbose) console.log('Cache is already up to date')
       return
