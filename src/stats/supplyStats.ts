@@ -56,10 +56,9 @@ export async function calculateSecureAccountsBalance(): Promise<number> {
     let totalBalanceShm = 0
     for (const row of results) {
       if (row.balance) {
-        // Balance is stored as a decimal string, not hex
-        // Convert from wei to SHM (18 decimals)
-        const balanceWei = parseFloat(row.balance)
-        const balanceShm = balanceWei / 1e18
+        // Balance is stored as a hex string without '0x' prefix
+        const balanceHex = '0x' + row.balance
+        const balanceShm = hexToSHM(balanceHex)
         totalBalanceShm += balanceShm
         
         if (config.verbose) {
