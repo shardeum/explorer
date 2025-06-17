@@ -57,6 +57,9 @@ export const config = {
     interval: 25,
     amount: 50,
   },
+  secureAccounts: process.env.SECURE_ACCOUNTS 
+    ? process.env.SECURE_ACCOUNTS.split(',').map(addr => addr.trim())
+    : [],
 }
 
 export const DISTRIBUTOR_URL = `http://${config.distributorInfo.ip}:${config.distributorInfo.port}`

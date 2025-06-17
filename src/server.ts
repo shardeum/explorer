@@ -12,6 +12,7 @@ import * as CoinStats from './stats/coinStats'
 import * as TransactionStats from './stats/transactionStats'
 import * as NodeStats from './stats/nodeStats'
 import * as ValidatorStats from './stats/validatorStats'
+import * as SupplyStats from './stats/supplyStats'
 import * as Storage from './storage'
 import * as Account from './storage/account'
 import * as Cycle from './storage/cycle'
@@ -54,6 +55,7 @@ import path from 'path'
 import fs from 'fs'
 import { Utils as StringUtils } from '@shardeum-foundation/lib-types'
 import { healthCheckRouter } from './routes/healthCheck'
+import { startSupplyStatsCron, stopSupplyStatsCron } from './cron/supplyStatsCron'
 //import { config } from './config/index'
 
 crypto.init('69fa4195670576c0160d660c3be36556ff8d504725be8a59b5a96509e0c994bc')
@@ -144,6 +146,8 @@ const start = async (): Promise<void> => {
   let cachedNetworkAccount: { account: NetworkAccount; timestamp: number } | undefined = undefined
   await Storage.initializeDB()
   await StatsStorage.initializeStatsDB()
+
+  await startSupplyStatsCron()
 
   const server = Fastify({
     logger: false,
@@ -1593,6 +1597,27 @@ const start = async (): Promise<void> => {
       }
     }
     reply.send(res)
+  })
+
+  server.get('/api/stats/supply', async (_request, reply) => {
+    try {
+      const supplyStats = await SupplyStats.getSupplyStats()
+      
+      const res = {
+        success: true,
+        circulatingSupply: supplyStats.circulatingSupply,
+        totalShmRewarded: supplyStats.totalShmRewarded,
+        totalShmBurned: supplyStats.totalShmBurned,
+      }
+      
+      reply.send(res)
+    } catch (error) {
+      console.error('Error fetching supply stats:', error)
+      reply.status(500).send({
+        success: false,
+        error: 'Failed to retrieve supply statistics',
+      })
+    }
   })
 
   server.get('/totalData', async (_request, reply) => {

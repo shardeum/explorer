@@ -59,4 +59,17 @@ export const initializeStatsDB = async (): Promise<void> => {
       cycleNumber NUMBER NOT NULL
     )`
   )
+
+  // supply stats cache table to store aggregated supply statistics up to a certain cycle
+  await db.runCreate(
+    `CREATE TABLE IF NOT EXISTS supply_stats_cache (
+      id INTEGER PRIMARY KEY,
+      lastCycle NUMBER NOT NULL,
+      circulatingSupply REAL NOT NULL,
+      totalShmRewarded REAL NOT NULL,
+      totalShmBurned REAL NOT NULL,
+      lastUpdated BIGINT NOT NULL
+    )`
+  )
+  await db.runCreate('CREATE INDEX if not exists `supply_stats_cache_idx` ON `supply_stats_cache` (`lastCycle` DESC)')
 }
