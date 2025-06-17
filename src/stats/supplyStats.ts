@@ -44,18 +44,27 @@ export async function calculateSecureAccountsBalance(): Promise<number> {
     
     const placeholders = config.secureAccounts.map(() => '?').join(', ')
     const sql = `
-      SELECT json_extract(account, '$.balance') as balance
+      SELECT 
+        ethAddress,
+        json_extract(account, '$.account.balance.value') as balance
       FROM accounts 
       WHERE LOWER(ethAddress) IN (${placeholders})
     `
     
-    const results: Array<{ balance: string }> = await db.all(sql, config.secureAccounts.map(acc => acc.toLowerCase()))
+    const results: Array<{ ethAddress: string; balance: string }> = await db.all(sql, config.secureAccounts.map(acc => acc.toLowerCase()))
     
     let totalBalanceShm = 0
     for (const row of results) {
       if (row.balance) {
-        // Balance is stored as hex string
-        totalBalanceShm += hexToSHM(row.balance)
+        // Balance is stored as a decimal string, not hex
+        // Convert from wei to SHM (18 decimals)
+        const balanceWei = parseFloat(row.balance)
+        const balanceShm = balanceWei / 1e18
+        totalBalanceShm += balanceShm
+        
+        if (config.verbose) {
+          console.log(`Secure account ${row.ethAddress}: ${balanceShm} SHM`)
+        }
       }
     }
     
