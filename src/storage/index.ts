@@ -1,6 +1,7 @@
 import * as db from './sqlite3storage'
 import WebSocket from 'ws'
 import { FastifyInstance } from 'fastify'
+import { stopSupplyStatsCron } from '../cron/supplyStatsCron'
 
 export const initializeDB = async (): Promise<void> => {
   await db.init()
@@ -85,12 +86,14 @@ export const closeDatabase = async (): Promise<void> => {
 export const addExitListeners = (server?: WebSocket | FastifyInstance): void => {
   process.on('SIGINT', async () => {
     console.log('Exiting on SIGINT')
+    stopSupplyStatsCron()
     if (server) server.close()
     await closeDatabase()
     process.exit(0)
   })
   process.on('SIGTERM', async () => {
     console.log('Exiting on SIGTERM')
+    stopSupplyStatsCron()
     if (server) server.close()
     await closeDatabase()
     process.exit(0)
