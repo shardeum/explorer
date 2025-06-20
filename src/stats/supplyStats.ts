@@ -147,15 +147,16 @@ export async function calculateTotalShmBurnedFromCycle(startCycle?: number): Pro
   try {
     let totalBurnedShm = 0
     
+    // Query to get gas fees from regular transactions
     let regularTxSql = `
-      SELECT SUM(
-        CAST(json_extract(wrappedEVMAccount, '$.readableReceipt.gasUsed') AS REAL) * 
-        CAST(json_extract(wrappedEVMAccount, '$.readableReceipt.gasPrice') AS REAL)
-      ) as totalBurned
+      SELECT 
+        json_extract(wrappedEVMAccount, '$.readableReceipt.gasUsed') as gasUsed,
+        json_extract(wrappedEVMAccount, '$.readableReceipt.gasPrice') as gasPrice
       FROM transactions 
       WHERE json_extract(wrappedEVMAccount, '$.readableReceipt.status') = 1
       AND json_extract(wrappedEVMAccount, '$.readableReceipt.gasUsed') IS NOT NULL
       AND json_extract(wrappedEVMAccount, '$.readableReceipt.gasPrice') IS NOT NULL
+      AND json_extract(wrappedEVMAccount, '$.readableReceipt.gasUsed') != '0x0'
     `
     const regularTxParams: any[] = []
 
@@ -164,10 +165,17 @@ export async function calculateTotalShmBurnedFromCycle(startCycle?: number): Pro
       regularTxParams.push(startCycle)
     }
 
-    const regularTxResult: { totalBurned: number } | undefined = await db.get(regularTxSql, regularTxParams)
+    const regularTxResults: Array<{ gasUsed: string; gasPrice: string }> = await db.all(regularTxSql, regularTxParams)
 
-    const regularTxBurnedWei = regularTxResult?.totalBurned || 0
-    totalBurnedShm += regularTxBurnedWei / 1e18
+    // Calculate total burned by converting hex values
+    for (const tx of regularTxResults) {
+      if (tx.gasUsed && tx.gasPrice) {
+        const gasUsedBN = new BN(tx.gasUsed.replace('0x', ''), 16)
+        const gasPriceBN = new BN(tx.gasPrice.replace('0x', ''), 16)
+        const gasFeeWei = gasUsedBN.mul(gasPriceBN)
+        totalBurnedShm += parseFloat(gasFeeWei.toString()) / 1e18
+      }
+    }
     
     if (config.verbose) console.log('Total SHM burned from cycle', startCycle || 0, ':', totalBurnedShm)
     return totalBurnedShm
