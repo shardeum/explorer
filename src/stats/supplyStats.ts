@@ -152,48 +152,18 @@ export async function calculateTotalShmBurnedFromCycle(startCycle?: number): Pro
       ) as totalBurned
       FROM transactions 
       WHERE json_extract(wrappedEVMAccount, '$.readableReceipt.status') = 1
-      AND transactionType IN (?, ?, ?)
     `
-    const regularTxParams: any[] = [
-      TransactionType.Receipt,
-      TransactionType.StakeReceipt,
-      TransactionType.UnstakeReceipt
-    ]
-    
+    const regularTxParams: any[] = []
+
     if (startCycle !== undefined) {
       regularTxSql += ` AND cycle > ?`
       regularTxParams.push(startCycle)
     }
-    
+
     const regularTxResult: { totalBurned: number } | undefined = await db.get(regularTxSql, regularTxParams)
-    
+
     const regularTxBurnedWei = regularTxResult?.totalBurned || 0
     totalBurnedShm += regularTxBurnedWei / 1e18
-    
-    let internalTxSql = `
-      SELECT json_extract(wrappedEVMAccount, '$.amountSpent') as amountSpent
-      FROM transactions 
-      WHERE transactionType = ?
-      AND internalTXType != ?
-      AND json_extract(wrappedEVMAccount, '$.readableReceipt.status') = 1
-    `
-    const internalTxParams: any[] = [
-      TransactionType.InternalTxReceipt,
-      InternalTXType.TransferFromSecureAccount
-    ]
-    
-    if (startCycle !== undefined) {
-      internalTxSql += ` AND cycle > ?`
-      internalTxParams.push(startCycle)
-    }
-    
-    const internalTxResults: Array<{ amountSpent: string }> = await db.all(internalTxSql, internalTxParams)
-    
-    for (const row of internalTxResults) {
-      if (row.amountSpent) {
-        totalBurnedShm += hexToSHM(row.amountSpent)
-      }
-    }
     
     if (config.verbose) console.log('Total SHM burned from cycle', startCycle || 0, ':', totalBurnedShm)
     return totalBurnedShm
