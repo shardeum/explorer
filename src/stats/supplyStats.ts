@@ -114,7 +114,7 @@ export async function calculateTotalShmRewardedFromCycle(startCycle?: number): P
       SELECT json_extract(wrappedEVMAccount, '$.balance') as rewardAmount
       FROM transactions 
       WHERE transactionType = ? 
-      AND internalTXType = ?
+      AND json_extract(wrappedEVMAccount, '$.readableReceipt.internalTx.internalTXType') = ?
       AND json_extract(wrappedEVMAccount, '$.readableReceipt.status') = 1
     `
     const params: any[] = [TransactionType.InternalTxReceipt, InternalTXType.ClaimReward]
