@@ -111,10 +111,10 @@ export async function saveSupplyStatsCache(stats: SupplyStatsCache): Promise<voi
 export async function calculateTotalShmRewardedFromCycle(startCycle?: number): Promise<number> {
   try {
     let sql = `
-      SELECT json_extract(wrappedEVMAccount, '$.balance') as rewardAmount
+      SELECT json_extract(wrappedEVMAccount, '$.readableReceipt.rewardAmount.value') as rewardAmount
       FROM transactions 
       WHERE transactionType = ? 
-      AND json_extract(wrappedEVMAccount, '$.readableReceipt.internalTx.internalTXType') = ?
+      AND internalTXType = ?
       AND json_extract(wrappedEVMAccount, '$.readableReceipt.status') = 1
     `
     const params: any[] = [TransactionType.InternalTxReceipt, InternalTXType.ClaimReward]
@@ -129,7 +129,9 @@ export async function calculateTotalShmRewardedFromCycle(startCycle?: number): P
     let totalRewardedShm = 0
     for (const row of results) {
       if (row.rewardAmount) {
-        totalRewardedShm += hexToSHM(row.rewardAmount)
+        // rewardAmount value doesn't have '0x' prefix, add it
+        const rewardHex = '0x' + row.rewardAmount
+        totalRewardedShm += hexToSHM(rewardHex)
       }
     }
     
@@ -148,10 +150,12 @@ export async function calculateTotalShmBurnedFromCycle(startCycle?: number): Pro
     let regularTxSql = `
       SELECT SUM(
         CAST(json_extract(wrappedEVMAccount, '$.readableReceipt.gasUsed') AS REAL) * 
-        CAST(json_extract(wrappedEVMAccount, '$.readableReceipt.effectiveGasPrice') AS REAL)
+        CAST(json_extract(wrappedEVMAccount, '$.readableReceipt.gasPrice') AS REAL)
       ) as totalBurned
       FROM transactions 
       WHERE json_extract(wrappedEVMAccount, '$.readableReceipt.status') = 1
+      AND json_extract(wrappedEVMAccount, '$.readableReceipt.gasUsed') IS NOT NULL
+      AND json_extract(wrappedEVMAccount, '$.readableReceipt.gasPrice') IS NOT NULL
     `
     const regularTxParams: any[] = []
 
