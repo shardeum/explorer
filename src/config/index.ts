@@ -36,6 +36,7 @@ export const config = {
   apiUrl: '',
   verbose: false,
   genesisSHMSupply: 249000000,
+  burnedSupply: 500000, // 500,000 SHM burned
   dbPath: process.env.DB_PATH?.replace(/\/+$/, '') || '.', // remove
   rateLimit: 100,
   GTM_Id: '',

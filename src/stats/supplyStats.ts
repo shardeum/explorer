@@ -221,7 +221,7 @@ export async function updateSupplyStatsCache(): Promise<void> {
     
     const secureAccountsBalance = await calculateSecureAccountsBalance()
     
-    const circulatingSupply = BASE_SUPPLY - totalShmBurned + totalShmRewarded - secureAccountsBalance
+    const circulatingSupply = BASE_SUPPLY - totalShmBurned + totalShmRewarded - secureAccountsBalance - config.burnedSupply
     
     await saveSupplyStatsCache({
       lastCycle: latestCycle,
