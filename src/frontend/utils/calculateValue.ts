@@ -27,40 +27,25 @@ export const calculateTokenValue = (
   fullValue = true
 ): string => {
   try {
-    console.log('calculateTokenValue - Input:', { tokenTx, txType, tokenId, fullValue })
-    
     if (txType === TokenType.ERC_20 || txType === TokenType.EVM_Internal) {
-      console.log('calculateTokenValue - ERC20/EVM_Internal branch')
-      console.log('calculateTokenValue - contractInfo:', tokenTx.contractInfo)
-      console.log('calculateTokenValue - tokenValue:', tokenTx.tokenValue)
-      
       const decimalsValue = tokenTx.contractInfo.decimals && !isNaN(parseInt(tokenTx.contractInfo.decimals)) 
         ? parseInt(tokenTx.contractInfo.decimals) 
         : 18
-      
-      console.log('calculateTokenValue - decimalsValue:', decimalsValue)
 
-      if (tokenTx.tokenValue === '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff') {
-        console.log('calculateTokenValue - unlimited value detected')
-        return 'unlimited'
-      }
-      
-      console.log('calculateTokenValue - attempting formatUnits with:', tokenTx.tokenValue, decimalsValue)
-      const formatted = formatUnits(tokenTx.tokenValue, decimalsValue)
-      console.log('calculateTokenValue - formatUnits result:', formatted)
-      
-      return fullValue ? formatted : roundTokenValue(formatted)
+      return tokenTx.tokenValue === '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+        ? 'unlimited'
+        : fullValue
+        ? formatUnits(tokenTx.tokenValue, decimalsValue)
+        : roundTokenValue(formatUnits(tokenTx.tokenValue, decimalsValue))
 
       // : round(web3.utils.fromWei(tokenTx.tokenValue, "ether"));
     } else if (txType === TokenType.ERC_721) {
-      console.log('calculateTokenValue - ERC721 branch')
       return tokenTx.tokenEvent === 'Approval For All'
         ? tokenTx.tokenValue === '0x0000000000000000000000000000000000000000000000000000000000000001'
           ? 'True'
           : 'False'
         : shortTokenValue(web3.utils.hexToNumberString(tokenTx.tokenValue))
     } else if (txType === TokenType.ERC_1155) {
-      console.log('calculateTokenValue - ERC1155 branch')
       return tokenTx.tokenEvent === 'Approval For All'
         ? tokenTx.tokenValue === '0x0000000000000000000000000000000000000000000000000000000000000001'
           ? 'True'
@@ -71,11 +56,7 @@ export const calculateTokenValue = (
         ? shortTokenValue(web3.utils.hexToNumberString(tokenTx.tokenValue.substring(0, 66)))
         : shortTokenValue(web3.utils.hexToNumberString('0x' + tokenTx.tokenValue.substring(66, 130)))
     }
-    
-    console.log('calculateTokenValue - No matching token type, txType:', txType)
   } catch (e) {
-    console.error('calculateTokenValue - Error caught:', e)
-    console.error('calculateTokenValue - Error stack:', e.stack)
     return 'error in calculating tokenValue'
   }
   return 'error in calculating tokenValue'
