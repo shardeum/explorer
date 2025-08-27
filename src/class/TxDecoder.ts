@@ -237,26 +237,56 @@ export const decodeTx = async (
           if (config.verbose)
             if (log.data.length == 130) {
               console.log(log.data.substring(0, 66))
-              console.log(Web3.utils.fromWei(`${log.data.substring(0, 66)}`, 'ether'))
+              try {
+                console.log(Web3.utils.fromWei(`${log.data.substring(0, 66)}`, 'ether'))
+              } catch (e) {
+                console.log('Large number, cannot convert to Wei')
+              }
               console.log(log.data.substring(66, 130))
-              console.log(Web3.utils.fromWei(`${log.data.substring(66, 130)}`, 'ether'))
+              try {
+                console.log(Web3.utils.fromWei(`${log.data.substring(66, 130)}`, 'ether'))
+              } catch (e) {
+                console.log('Large number, cannot convert to Wei')
+              }
             } else console.log('length is not equal to 130')
         } else if (log.topics.includes(UNISWAP_SWAP_EVENT)) {
           if (config.verbose) console.log('Uniswap Swap', log.data.length, log.data)
           if (config.verbose)
             if (log.data.length == 258) {
               console.log(log.data.substring(0, 66))
-              console.log(Web3.utils.fromWei(`${log.data.substring(0, 66)}`, 'ether'))
+              try {
+                console.log(Web3.utils.fromWei(`${log.data.substring(0, 66)}`, 'ether'))
+              } catch (e) {
+                console.log('Large number, cannot convert to Wei')
+              }
               console.log(log.data.substring(66, 130))
-              console.log(Web3.utils.fromWei(`${log.data.substring(66, 130)}`, 'ether'))
+              try {
+                console.log(Web3.utils.fromWei(`${log.data.substring(66, 130)}`, 'ether'))
+              } catch (e) {
+                console.log('Large number, cannot convert to Wei')
+              }
               console.log(log.data.substring(130, 194))
-              console.log(Web3.utils.fromWei(`${log.data.substring(130, 194)}`, 'ether'))
+              try {
+                console.log(Web3.utils.fromWei(`${log.data.substring(130, 194)}`, 'ether'))
+              } catch (e) {
+                console.log('Large number, cannot convert to Wei')
+              }
               console.log(log.data.substring(194, 258))
-              console.log(Web3.utils.fromWei(`${log.data.substring(192, 258)}`, 'ether'))
+              try {
+                console.log(Web3.utils.fromWei(`${log.data.substring(192, 258)}`, 'ether'))
+              } catch (e) {
+                console.log('Large number, cannot convert to Wei')
+              }
             } else console.log('length is not equal to 258')
         } else if (log.topics.includes(UNISWAP_DEPOSIT_EVENT)) {
           if (config.verbose) console.log('Uniswap Deposit', log.data.length, log.data)
-          if (config.verbose) console.log(Web3.utils.fromWei(log.data, 'ether'))
+          if (config.verbose) {
+            try {
+              console.log(Web3.utils.fromWei(log.data, 'ether'))
+            } catch (e) {
+              console.log('Large number, cannot convert to Wei')
+            }
+          }
           if (tx.txTo !== log.address)
             tokenTx = {
               tokenType: TokenType.EVM_Internal,
@@ -267,7 +297,13 @@ export const decodeTx = async (
             } as TokenTx
         } else if (log.topics.includes(UNISWAP_WITHDRAWAL_EVENT)) {
           if (config.verbose) console.log('Uniswap Withdraw', log.data.length, log.data)
-          if (config.verbose) console.log(Web3.utils.fromWei(log.data, 'ether'))
+          if (config.verbose) {
+            try {
+              console.log(Web3.utils.fromWei(log.data, 'ether'))
+            } catch (e) {
+              console.log('Large number, cannot convert to Wei')
+            }
+          }
           if (tx.txTo !== log.address)
             tokenTx = {
               tokenType: TokenType.EVM_Internal,
@@ -423,14 +459,12 @@ export const decodeTx = async (
               }
               /* prettier-ignore */ if (config.verbose)  console.log(calculatedKey, tokenValue)
             }
-            if (tokenValue !== '0') {
-              tokens.push({
-                ethAddress: tokenTx.tokenTo,
-                contractAddress: log.address,
-                tokenValue,
-                tokenType: tokenTx.tokenType,
-              })
-            }
+            tokens.push({
+              ethAddress: tokenTx.tokenTo,
+              contractAddress: log.address,
+              tokenValue: tokenValue || '0',
+              tokenType: tokenTx.tokenType,
+            })
           }
         }
       }

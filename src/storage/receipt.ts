@@ -289,7 +289,7 @@ export async function processReceiptData(receipts: Receipt[], saveOnlyNewData = 
               txHash: txObj.txHash,
               cycle: txObj.cycle,
               timestamp: txObj.timestamp,
-              transactionFee: txObj.wrappedEVMAccount.amountSpent, // Maybe provide with actual token transfer cost
+              transactionFee: txObj.wrappedEVMAccount.amountSpent || '0', // Maybe provide with actual token transfer cost
               contractInfo,
             }
             if (tx.tokenType === TokenType.ERC_1155) {
