@@ -1,5 +1,5 @@
 import web3 from 'web3'
-import { formatUnits } from 'ethers'
+import { ethers } from 'ethers'
 import { TokenTx, TokenType, TransactionType } from '../../types'
 import BN from 'bn.js'
 import { fromWeiNoTrailingComma } from './fromWeiNoTrailingComma'
@@ -32,9 +32,16 @@ export const calculateTokenValue = (
 
       return tokenTx.tokenValue === '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
         ? 'unlimited'
-        : fullValue
-        ? formatUnits(tokenTx.tokenValue, decimalsValue)
-        : roundTokenValue(formatUnits(tokenTx.tokenValue, decimalsValue))
+        : (() => {
+            try {
+              return fullValue
+                ? ethers.formatUnits(tokenTx.tokenValue, decimalsValue)
+                : roundTokenValue(ethers.formatUnits(tokenTx.tokenValue, decimalsValue))
+            } catch (error) {
+              console.error('Error formatting token value:', error, tokenTx.tokenValue)
+              return 'Error formatting value'
+            }
+          })()
 
       // : round(web3.utils.fromWei(tokenTx.tokenValue, "ether"));
     } else if (txType === TokenType.ERC_721) {

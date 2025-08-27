@@ -245,12 +245,22 @@ export const AccountDetail: React.FC = () => {
                         {
                           key: 'Max Total Supply :',
                           value: account?.contractInfo?.totalSupply
-                            ? ethers
-                                .formatUnits(
-                                  account?.contractInfo?.totalSupply,
-                                  account?.contractInfo?.decimals ? parseInt(account?.contractInfo?.decimals) : 18
-                                )
-                                .toString()
+                            ? (() => {
+                                try {
+                                  const totalSupply = typeof account.contractInfo.totalSupply === 'number'
+                                    ? account.contractInfo.totalSupply.toLocaleString('fullwide', { useGrouping: false })
+                                    : account.contractInfo.totalSupply.toString()
+                                  return ethers
+                                    .formatUnits(
+                                      totalSupply,
+                                      account?.contractInfo?.decimals ? parseInt(account?.contractInfo?.decimals) : 18
+                                    )
+                                    .toString()
+                                } catch (error) {
+                                  console.error('Error formatting total supply:', error)
+                                  return account.contractInfo.totalSupply.toString()
+                                }
+                              })()
                             : '',
                         },
                       ]}
