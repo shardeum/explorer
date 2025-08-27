@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import web3 from 'web3'
-import { utils } from 'ethers'
+import { ethers } from 'ethers'
 import moment from 'moment'
 import { Button, ContentLayout, CopyButton, Spacer, Pagination } from '../../components'
 import { Tab } from '../../components/Tab'
@@ -245,7 +245,7 @@ export const AccountDetail: React.FC = () => {
                         {
                           key: 'Max Total Supply :',
                           value: account?.contractInfo?.totalSupply
-                            ? utils
+                            ? ethers
                                 .formatUnits(
                                   account?.contractInfo?.totalSupply,
                                   account?.contractInfo?.decimals ? parseInt(account?.contractInfo?.decimals) : 18

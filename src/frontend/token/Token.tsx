@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import { formatUnits } from 'ethers'
+import { ethers } from 'ethers'
 
 import { AnchorLink, Button, ContentLayout, CopyButton, Spacer, Tab, Table, Pagination } from '../components'
 import { DetailCard } from '../account/DetailCard'
@@ -59,7 +59,7 @@ export const Token: React.FC = () => {
           {val
             ? transactionType === TransactionSearchType.ERC_721
               ? val
-              : formatUnits(
+              : ethers.formatUnits(
                     val as number,
                     account?.contractInfo?.decimals ? parseInt(account?.contractInfo?.decimals) : 18
                   )
@@ -156,7 +156,7 @@ export const Token: React.FC = () => {
                   {
                     key: 'Max Total Supply :',
                     value: account?.contractInfo?.totalSupply
-                      ? formatUnits(
+                      ? ethers.formatUnits(
                             account?.contractInfo?.totalSupply,
                             account?.contractInfo?.decimals ? parseInt(account?.contractInfo?.decimals) : 18
                           )
@@ -176,7 +176,7 @@ export const Token: React.FC = () => {
                     {
                       key: 'Max Total Supply :',
                       value: account?.contractInfo?.totalSupply
-                        ? formatUnits(
+                        ? ethers.formatUnits(
                               account?.contractInfo?.totalSupply,
                               account?.contractInfo?.decimals ? parseInt(account?.contractInfo?.decimals) : 18
                             )
@@ -217,7 +217,7 @@ export const Token: React.FC = () => {
                 {tokenBalance
                   ? transactionType === TransactionSearchType.ERC_721
                     ? tokenBalance
-                    : formatUnits(
+                    : ethers.formatUnits(
                           tokenBalance,
                           account?.contractInfo?.decimals ? parseInt(account?.contractInfo?.decimals) : 18
                         )
