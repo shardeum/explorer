@@ -1,5 +1,5 @@
 import web3 from 'web3'
-import { utils } from 'ethers'
+import { formatUnits } from 'ethers'
 import { TokenTx, TokenType, TransactionType } from '../../types'
 import BN from 'bn.js'
 import { fromWeiNoTrailingComma } from './fromWeiNoTrailingComma'
@@ -46,7 +46,7 @@ export const calculateTokenValue = (
       }
       
       console.log('calculateTokenValue - attempting formatUnits with:', tokenTx.tokenValue, decimalsValue)
-      const formatted = utils.formatUnits(tokenTx.tokenValue, decimalsValue)
+      const formatted = formatUnits(tokenTx.tokenValue, decimalsValue)
       console.log('calculateTokenValue - formatUnits result:', formatted)
       
       return fullValue ? formatted : roundTokenValue(formatted)
