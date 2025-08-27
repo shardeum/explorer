@@ -244,6 +244,7 @@ export async function processReceiptData(receipts: Receipt[], saveOnlyNewData = 
           newTx = false
         }
         const { txs, accs, tokens } = await decodeTx(txObj, storageKeyValueMap, newTx)
+        console.log(`decodeTx results for ${txObj.txHash}: ${txs.length} tokenTxs, ${tokens.length} tokens`)
         for (const acc of accs) {
           if (acc === ZERO_ETH_ADDRESS) continue
           if (!combineAccounts1.some((a) => a.ethAddress === acc)) {
