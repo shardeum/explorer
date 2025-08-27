@@ -272,6 +272,9 @@ export async function processReceiptData(receipts: Receipt[], saveOnlyNewData = 
             }
           }
         }
+        if (txs.length > 0) {
+          console.log(`Processing ${txs.length} token transactions from decodeTx for tx ${txObj.txHash}`)
+        }
         for (const tx of txs) {
           let accountExist: Account | null = null
           if (tx.tokenType !== TokenType.EVM_Internal)
@@ -282,7 +285,7 @@ export async function processReceiptData(receipts: Receipt[], saveOnlyNewData = 
           if (accountExist && accountExist.contractInfo) {
             contractInfo = accountExist.contractInfo
           }
-          if ('amountSpent' in txObj.wrappedEVMAccount) {
+          if ('amountSpent' in txObj.wrappedEVMAccount || txObj.wrappedEVMAccount.amountSpent !== undefined) {
             const obj: TokenTx = {
               ...tx,
               txId: txObj.txId,
