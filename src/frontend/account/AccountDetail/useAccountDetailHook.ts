@@ -83,11 +83,11 @@ export const useAccountDetailHook = ({ id, txType }: detailProps): AccountDetail
           (accounts && accounts.length > 0 && accounts[0].accountId)
         ) {
           const { tokens } = await getToken()
-          if (tokens.length > 0) {
+          if (tokens && tokens.length > 0) {
             tokens.forEach(
-              (item: { contractType: ContractType; contractInfo: { decimals: string }; balance: BigNumberish }) => {
+              (item: { contractType: ContractType; contractInfo: { decimals: string } | null; balance: BigNumberish }) => {
                 if (item.contractType === ContractType.ERC_20) {
-                  const decimalsValue = item.contractInfo.decimals ? parseInt(item.contractInfo.decimals) : 18
+                  const decimalsValue = item.contractInfo?.decimals ? parseInt(item.contractInfo.decimals) : 18
                   item.balance = utils.formatUnits(item.balance, decimalsValue)
                 }
               }
