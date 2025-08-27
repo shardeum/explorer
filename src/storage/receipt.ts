@@ -285,14 +285,14 @@ export async function processReceiptData(receipts: Receipt[], saveOnlyNewData = 
           if (accountExist && accountExist.contractInfo) {
             contractInfo = accountExist.contractInfo
           }
-          if ('amountSpent' in txObj.wrappedEVMAccount || txObj.wrappedEVMAccount.amountSpent !== undefined) {
+          if ('amountSpent' in txObj.wrappedEVMAccount) {
             const obj: TokenTx = {
               ...tx,
               txId: txObj.txId,
               txHash: txObj.txHash,
               cycle: txObj.cycle,
               timestamp: txObj.timestamp,
-              transactionFee: txObj.wrappedEVMAccount.amountSpent || '0', // Maybe provide with actual token transfer cost
+              transactionFee: (txObj.wrappedEVMAccount as any).amountSpent || '0', // Maybe provide with actual token transfer cost
               contractInfo,
             }
             if (tx.tokenType === TokenType.ERC_1155) {
