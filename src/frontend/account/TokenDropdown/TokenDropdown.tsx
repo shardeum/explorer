@@ -53,14 +53,19 @@ export const TokenDropdown: React.FC<TokenDropdownProps> = (props) => {
         <input placeholder="Search for Token Name" className={styles.search} ref={inputRef} />
         <div className={styles.item}>
           <div className={styles.label}>
-            ERC-20 Tokens <span>(1)</span>
+            ERC-20 Tokens <span>({tokens.length})</span>
           </div>
           <SortButton isUp={isSortUp} onSort={() => setIsSortUp(!isSortUp)} />
         </div>
         {
           tokens && tokens.length > 0 ? (
             tokens?.map((row, index) => (
-              <MenuItem key={index} label={row.balance} label2={row?.contractInfo?.name || row.contractAddress} className={styles.menuItem} />
+              <MenuItem
+                key={index}
+                label={row.balance}
+                label2={row?.contractInfo?.name || row.contractAddress}
+                className={styles.menuItem}
+              />
             ))
           ) : (
             <div className={styles.empty}>No Tokens Found!</div>
