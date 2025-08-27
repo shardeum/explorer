@@ -109,7 +109,8 @@ export async function bulkInsertTokenTransactions(tokenTxs: TokenTx[]): Promise<
     await db.run(sql, values)
     console.log('Successfully inserted token transactions', tokenTxs.length)
   } catch (e) {
-    console.log(e)
+    console.error('Error inserting token transactions:', e)
+    console.error('TokenTx data that failed:', JSON.stringify(tokenTxs[0], null, 2))
     console.log('Unable to bulk insert token transactions', tokenTxs.length)
   }
 }
