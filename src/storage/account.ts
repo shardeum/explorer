@@ -263,14 +263,13 @@ export async function queryTokensByAddress(address: string, detail = false): Pro
         const accountExist = await queryAccountByAccountId(
           contractAddress.slice(2).toLowerCase() + '0'.repeat(24) //Search by Shardus address
         )
-        if (accountExist && accountExist.contractType) {
-          filterTokens.push({
-            contractAddress: contractAddress,
-            contractInfo: accountExist.contractInfo,
-            contractType: accountExist.contractType,
-            balance: tokenValue,
-          })
-        }
+        // Include all tokens, but provide contract info when available
+        filterTokens.push({
+          contractAddress: contractAddress,
+          contractInfo: accountExist?.contractInfo || null,
+          contractType: accountExist?.contractType || null,
+          balance: tokenValue,
+        })
       }
     }
     if (config.verbose) console.log('Tokens of an address', tokens)
