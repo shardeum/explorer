@@ -28,7 +28,9 @@ export const calculateTokenValue = (
 ): string => {
   try {
     if (txType === TokenType.ERC_20 || txType === TokenType.EVM_Internal) {
-      const decimalsValue = tokenTx.contractInfo.decimals ? parseInt(tokenTx.contractInfo.decimals) : 18
+      const decimalsValue = tokenTx.contractInfo.decimals && !isNaN(parseInt(tokenTx.contractInfo.decimals)) 
+        ? parseInt(tokenTx.contractInfo.decimals) 
+        : 18
 
       return tokenTx.tokenValue === '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
         ? 'unlimited'
