@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import { utils } from 'ethers'
+import { ethers } from 'ethers'
 
 import { AnchorLink, Button, ContentLayout, CopyButton, Spacer, Tab, Table, Pagination } from '../components'
 import { DetailCard } from '../account/DetailCard'
@@ -59,12 +59,20 @@ export const Token: React.FC = () => {
           {val
             ? transactionType === TransactionSearchType.ERC_721
               ? val
-              : utils
-                  .formatUnits(
-                    val as number,
-                    account?.contractInfo?.decimals ? parseInt(account?.contractInfo?.decimals) : 18
-                  )
-                  .toString()
+              : (() => {
+                  try {
+                    const valueStr = typeof val === 'number' 
+                      ? val.toLocaleString('fullwide', { useGrouping: false }) 
+                      : val.toString()
+                    return ethers.formatUnits(
+                      valueStr,
+                      account?.contractInfo?.decimals ? parseInt(account?.contractInfo?.decimals) : 18
+                    ).toString()
+                  } catch (error) {
+                    console.error('Error formatting token value:', error, val)
+                    return val.toString()
+                  }
+                })()
             : ''}
         </>
       ),
@@ -157,12 +165,20 @@ export const Token: React.FC = () => {
                   {
                     key: 'Max Total Supply :',
                     value: account?.contractInfo?.totalSupply
-                      ? utils
-                          .formatUnits(
-                            account?.contractInfo?.totalSupply,
-                            account?.contractInfo?.decimals ? parseInt(account?.contractInfo?.decimals) : 18
-                          )
-                          .toString()
+                      ? (() => {
+                          try {
+                            const totalSupply = typeof account.contractInfo.totalSupply === 'number'
+                              ? account.contractInfo.totalSupply.toLocaleString('fullwide', { useGrouping: false })
+                              : account.contractInfo.totalSupply.toString()
+                            return ethers.formatUnits(
+                              totalSupply,
+                              account?.contractInfo?.decimals ? parseInt(account?.contractInfo?.decimals) : 18
+                            ).toString()
+                          } catch (error) {
+                            console.error('Error formatting total supply:', error)
+                            return account.contractInfo.totalSupply.toString()
+                          }
+                        })()
                       : '',
                   },
                   { key: 'Holders :', value: totalTokenHolders },
@@ -178,12 +194,20 @@ export const Token: React.FC = () => {
                     {
                       key: 'Max Total Supply :',
                       value: account?.contractInfo?.totalSupply
-                        ? utils
-                            .formatUnits(
-                              account?.contractInfo?.totalSupply,
-                              account?.contractInfo?.decimals ? parseInt(account?.contractInfo?.decimals) : 18
-                            )
-                            .toString()
+                        ? (() => {
+                            try {
+                              const totalSupply = typeof account.contractInfo.totalSupply === 'number'
+                                ? account.contractInfo.totalSupply.toLocaleString('fullwide', { useGrouping: false })
+                                : account.contractInfo.totalSupply.toString()
+                              return ethers.formatUnits(
+                                totalSupply,
+                                account?.contractInfo?.decimals ? parseInt(account?.contractInfo?.decimals) : 18
+                              ).toString()
+                            } catch (error) {
+                              console.error('Error formatting total supply:', error)
+                              return account.contractInfo.totalSupply.toString()
+                            }
+                          })()
                         : '',
                     },
                   ]}
@@ -220,12 +244,20 @@ export const Token: React.FC = () => {
                 {tokenBalance
                   ? transactionType === TransactionSearchType.ERC_721
                     ? tokenBalance
-                    : utils
-                        .formatUnits(
-                          tokenBalance,
-                          account?.contractInfo?.decimals ? parseInt(account?.contractInfo?.decimals) : 18
-                        )
-                        .toString()
+                    : (() => {
+                        try {
+                          const balanceStr = typeof tokenBalance === 'number'
+                            ? tokenBalance.toLocaleString('fullwide', { useGrouping: false })
+                            : tokenBalance.toString()
+                          return ethers.formatUnits(
+                            balanceStr,
+                            account?.contractInfo?.decimals ? parseInt(account?.contractInfo?.decimals) : 18
+                          ).toString()
+                        } catch (error) {
+                          console.error('Error formatting token balance:', error, tokenBalance)
+                          return tokenBalance.toString()
+                        }
+                      })()
                   : ''}
               </div>
             </div>

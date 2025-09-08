@@ -23,6 +23,16 @@ export const Ovewview: React.FC<OvewviewProps> = ({ transaction }) => {
   const internalTxType = isInternalTx
     ? transaction.wrappedEVMAccount?.readableReceipt?.internalTx?.internalTXType
     : undefined
+
+  // Check if this is an ERC20 transfer transaction
+  const isERC20Transfer = transaction?.tokenTxs && 
+    transaction.tokenTxs.length > 0 && 
+    transaction.tokenTxs[0].tokenType === TokenType.ERC_20 &&
+    (transaction.tokenTxs[0].tokenEvent === 'Transfer' || 
+     transaction.tokenTxs[0].tokenEvent === 'Mint' || 
+     transaction.tokenTxs[0].tokenEvent === 'Burn')
+  
+  const primaryERC20Transfer = isERC20Transfer ? transaction.tokenTxs[0] : null
   const renderErc20Tokens = (): JSX.Element | undefined => {
     const items = transaction?.tokenTxs
 
@@ -65,7 +75,7 @@ export const Ovewview: React.FC<OvewviewProps> = ({ transaction }) => {
                   <span>For</span>
                   <div>{calculateTokenValue(item, item.tokenType, undefined, true)}&nbsp;</div>
                   <Link href={`/account/${item.contractAddress}`} className={styles.anchor}>
-                    {item.tokenType === TokenType.EVM_Internal ? 'SHM' : item.contractInfo.name || item.contractAddress}
+                    {item.tokenType === TokenType.EVM_Internal ? 'SHM' : item.contractInfo?.name || item.contractAddress}
                   </Link>
                 </div>
               ))}
@@ -299,9 +309,23 @@ export const Ovewview: React.FC<OvewviewProps> = ({ transaction }) => {
             <div className={styles.title}>To:</div>
             <div className={styles.value}>
               {transaction?.wrappedEVMAccount?.readableReceipt?.to ? (
-                <Link href={`/account/${transaction?.txTo}`} className={styles.link}>
-                  {transaction?.txTo}
-                </Link>
+                isERC20Transfer && primaryERC20Transfer ? (
+                  <div>
+                    <Link href={`/account/${primaryERC20Transfer.tokenTo}`} className={styles.link}>
+                      {primaryERC20Transfer.tokenTo}
+                    </Link>
+                    <div style={{ fontSize: '0.8em', color: '#666', marginTop: '4px' }}>
+                      via{' '}
+                      <Link href={`/account/${transaction?.txTo}`} className={styles.link}>
+                        {primaryERC20Transfer.contractInfo?.name || 'Token Contract'}
+                      </Link>
+                    </div>
+                  </div>
+                ) : (
+                  <Link href={`/account/${transaction?.txTo}`} className={styles.link}>
+                    {transaction?.txTo}
+                  </Link>
+                )
               ) : (
                 <div>
                   <Link
@@ -375,7 +399,19 @@ export const Ovewview: React.FC<OvewviewProps> = ({ transaction }) => {
             <div className={styles.item}>
               <div className={styles.title}>Value:</div>
               <div className={styles.value}>
-                {calculateFullValue(`${transaction?.wrappedEVMAccount?.readableReceipt?.value ?? 0}`)} SHM
+                {isERC20Transfer && primaryERC20Transfer ? (
+                  <div>
+                    {calculateTokenValue(primaryERC20Transfer, primaryERC20Transfer.tokenType, undefined, true)}{' '}
+                    {primaryERC20Transfer.contractInfo?.symbol || primaryERC20Transfer.contractAddress}
+                    {transaction?.wrappedEVMAccount?.readableReceipt?.value !== '0x0' && (
+                      <div style={{ fontSize: '0.8em', color: '#666', marginTop: '4px' }}>
+                        + {calculateFullValue(`${transaction?.wrappedEVMAccount?.readableReceipt?.value ?? 0}`)} SHM
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  `${calculateFullValue(`${transaction?.wrappedEVMAccount?.readableReceipt?.value ?? 0}`)} SHM`
+                )}
               </div>
             </div>
           )}
