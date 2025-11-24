@@ -266,8 +266,8 @@ export async function queryTokensByAddress(address: string, detail = false): Pro
         if (accountExist && accountExist.contractType) {
           filterTokens.push({
             contractAddress: contractAddress,
-            contractInfo: accountExist.contractInfo,
-            contractType: accountExist.contractType,
+            contractInfo: accountExist?.contractInfo || null,
+            contractType: accountExist?.contractType || null,
             balance: tokenValue,
           })
         }

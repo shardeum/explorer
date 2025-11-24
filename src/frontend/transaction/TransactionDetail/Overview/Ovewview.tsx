@@ -65,7 +65,7 @@ export const Ovewview: React.FC<OvewviewProps> = ({ transaction }) => {
                   <span>For</span>
                   <div>{calculateTokenValue(item, item.tokenType, undefined, true)}&nbsp;</div>
                   <Link href={`/account/${item.contractAddress}`} className={styles.anchor}>
-                    {item.tokenType === TokenType.EVM_Internal ? 'SHM' : item.contractInfo.name || item.contractAddress}
+                    {item.tokenType === TokenType.EVM_Internal ? 'SHM' : item.contractInfo?.name || item.contractAddress}
                   </Link>
                 </div>
               ))}

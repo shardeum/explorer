@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import { utils } from 'ethers'
+import { formatUnits } from 'ethers'
 
 import { AnchorLink, Button, ContentLayout, CopyButton, Spacer, Tab, Table, Pagination } from '../components'
 import { DetailCard } from '../account/DetailCard'
@@ -59,8 +59,7 @@ export const Token: React.FC = () => {
           {val
             ? transactionType === TransactionSearchType.ERC_721
               ? val
-              : utils
-                  .formatUnits(
+              : formatUnits(
                     val as number,
                     account?.contractInfo?.decimals ? parseInt(account?.contractInfo?.decimals) : 18
                   )
@@ -157,8 +156,7 @@ export const Token: React.FC = () => {
                   {
                     key: 'Max Total Supply :',
                     value: account?.contractInfo?.totalSupply
-                      ? utils
-                          .formatUnits(
+                      ? formatUnits(
                             account?.contractInfo?.totalSupply,
                             account?.contractInfo?.decimals ? parseInt(account?.contractInfo?.decimals) : 18
                           )
@@ -178,8 +176,7 @@ export const Token: React.FC = () => {
                     {
                       key: 'Max Total Supply :',
                       value: account?.contractInfo?.totalSupply
-                        ? utils
-                            .formatUnits(
+                        ? formatUnits(
                               account?.contractInfo?.totalSupply,
                               account?.contractInfo?.decimals ? parseInt(account?.contractInfo?.decimals) : 18
                             )
@@ -220,8 +217,7 @@ export const Token: React.FC = () => {
                 {tokenBalance
                   ? transactionType === TransactionSearchType.ERC_721
                     ? tokenBalance
-                    : utils
-                        .formatUnits(
+                    : formatUnits(
                           tokenBalance,
                           account?.contractInfo?.decimals ? parseInt(account?.contractInfo?.decimals) : 18
                         )
